@@ -1,0 +1,20 @@
+{
+  "name": "Habit Tracker",
+  "short_name": "Habits",
+  "description": "Track daily habits with a calendar chart and reminders.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "../icons/habit.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "lifestyle"]
+}
