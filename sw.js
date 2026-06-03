@@ -1,6 +1,9 @@
-const CACHE = 'hub-v1';
+// Habit Tracker Service Worker — network first, cache as fallback
+const CACHE = 'ht-v1';
 
-self.addEventListener('install', e => self.skipWaiting());
+self.addEventListener('install', e => {
+  self.skipWaiting();
+});
 
 self.addEventListener('activate', e => {
   e.waitUntil(
@@ -19,4 +22,9 @@ self.addEventListener('fetch', e => {
       return res;
     }).catch(() => caches.match(e.request))
   );
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  e.waitUntil(clients.openWindow(self.registration.scope));
 });

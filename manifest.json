@@ -1,6 +1,6 @@
 {
-  "name": "My Apps",
-  "short_name": "My Apps",
+  "name": "Habit Tracker",
+  "short_name": "Habits",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -8,7 +8,7 @@
   "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "./icons/hub.svg",
+      "src": "../icons/habit.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
