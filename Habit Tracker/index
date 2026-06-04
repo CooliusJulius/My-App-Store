@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Habits" />
+  <title>Habit Tracker</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f5f5f0;
+      --surface:  #ffffff;
+      --border:   #e5e5e0;
+      --border2:  #d0d0c8;
+      --text:     #1a1a18;
+      --muted:    #888880;
+      --accent:   #2d6a4f;
+      --accent-l: #e8f4ef;
+      --danger:   #c0392b;
+      --nav-h:    62px;
+      --r:        12px;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+      height: 100%;
+    }
+
+    /* ── Layout ── */
+    #app {
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 28px 16px calc(var(--nav-h) + 24px);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    #nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    .nb {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; background: none; border: none;
+      color: var(--muted); cursor: pointer;
+      padding: 8px 16px; border-radius: 8px;
+      font-family: inherit; font-size: 11px; font-weight: 600;
+      letter-spacing: .02em;
+      -webkit-tap-highlight-color: transparent;
+      transition: color .15s;
+    }
+    .nb svg { width: 21px; height: 21px; }
+    .nb.active { color: var(--accent); }
+
+    /* ── Page header ── */
+    .ph { margin-bottom: 22px; }
+    .ph h1 { font-size: 26px; font-weight: 800; letter-spacing: -.5px; color: var(--text); }
+    .ph p  { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Empty state ── */
+    .empty { text-align: center; padding: 60px 16px; color: var(--muted); }
+    .empty .icon { font-size: 44px; margin-bottom: 14px; }
+    .empty p { font-size: 15px; line-height: 1.6; }
+    .empty strong { color: var(--text); }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: block; width: 100%;
+      background: var(--accent); color: #fff;
+      font-size: 15px; font-weight: 700; font-family: inherit;
+      border: none; border-radius: 8px;
+      padding: 14px; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent;
+      margin-top: 12px; letter-spacing: .01em;
+    }
+    .btn-primary:active { opacity: .85; }
+    .btn-secondary {
+      display: block; width: 100%;
+      background: transparent; color: var(--muted);
+      font-size: 15px; font-weight: 600; font-family: inherit;
+      border: 1px solid var(--border2); border-radius: 8px;
+      padding: 13px; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent; margin-top: 8px;
+    }
+    .btn-danger {
+      display: block; width: 100%;
+      background: transparent; color: var(--danger);
+      font-size: 15px; font-weight: 600; font-family: inherit;
+      border: 1px solid var(--danger); border-radius: 8px;
+      padding: 13px; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent; margin-top: 24px;
+    }
+
+    /* ── Form ── */
+    .fg { margin-bottom: 16px; }
+    .fg label {
+      display: block; font-size: 11px; font-weight: 700;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: .08em; margin-bottom: 7px;
+    }
+    .fg input[type="text"],
+    .fg input[type="time"] {
+      width: 100%; background: var(--bg);
+      border: 1px solid var(--border2); border-radius: 8px;
+      color: var(--text); padding: 12px 14px;
+      font-size: 15px; font-family: inherit;
+      outline: none; -webkit-appearance: none;
+    }
+    .fg input:focus { border-color: var(--accent); background: var(--surface); }
+    .fg input::placeholder { color: var(--muted); }
+
+    /* Color swatches */
+    .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+    .sw {
+      width: 32px; height: 32px; border-radius: 50%;
+      border: 3px solid transparent; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .12s;
+    }
+    .sw.on { border-color: var(--text); transform: scale(1.18); }
+
+    /* ── Summary ── */
+    .habit-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+    }
+    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .habit-name { font-size: 16px; font-weight: 700; flex: 1; color: var(--text); }
+    .habit-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .edit-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--muted); cursor: pointer; display: flex;
+      align-items: center; justify-content: center;
+      -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+    }
+    .edit-btn svg { width: 14px; height: 14px; }
+
+    .month-rows { display: flex; flex-direction: column; gap: 2px; }
+    .mrow { border-radius: 8px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .mrow-head {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 6px; border-radius: 8px; transition: background .1s;
+    }
+    .mrow:active .mrow-head { background: var(--bg); }
+    .mrow.open .mrow-head { background: var(--bg); border-radius: 8px 8px 0 0; }
+    .mrow-label {
+      font-size: 12px; font-weight: 600; color: var(--muted);
+      width: 64px; flex-shrink: 0;
+    }
+    .mrow.cur .mrow-label { color: var(--text); }
+    .bar-wrap { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 3px; min-width: 2px; }
+    .mrow-count { font-size: 11px; font-weight: 600; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; }
+    .chevron { width: 13px; height: 13px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+    .mrow.open .chevron { transform: rotate(180deg); }
+    .mrow-body { background: var(--bg); border-radius: 0 0 8px 8px; padding: 10px 6px 6px; }
+
+    /* ── Calendar ── */
+    .cal {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      width: 100%;
+    }
+    .cal-dow {
+      font-size: 10px; font-weight: 600; color: var(--muted);
+      text-align: center; padding-bottom: 4px;
+    }
+    .cal-day {
+      /* Use padding-bottom trick for square cells that always fit */
+      position: relative;
+      width: 100%;
+      padding-bottom: 100%;
+      border-radius: 5px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .cal-day-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .cal-day.empty { background: transparent; border-color: transparent; }
+    .cal-day.logged .cal-day-inner { color: #fff; font-weight: 700; }
+    .cal-day.today { box-shadow: 0 0 0 2px var(--text); }
+    .cal-day.future { opacity: .35; }
+    .cal-day.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+    .cal-day.tappable:active { opacity: .6; }
+
+    /* ── Chart ── */
+    .habit-tabs {
+      display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 16px; padding-bottom: 1px;
+    }
+    .habit-tabs::-webkit-scrollbar { display: none; }
+    .htab {
+      padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--border2); background: transparent;
+      color: var(--muted); font-size: 13px; font-weight: 600;
+      font-family: inherit; white-space: nowrap; cursor: pointer;
+      -webkit-tap-highlight-color: transparent; flex-shrink: 0;
+    }
+    .htab.active { color: var(--accent); border-color: var(--accent); background: var(--accent-l); }
+
+    .month-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .month-nav span { font-size: 16px; font-weight: 700; }
+    .mnav-btn {
+      width: 36px; height: 36px; border-radius: 8px;
+      border: 1px solid var(--border2); background: var(--surface);
+      color: var(--text); display: flex; align-items: center;
+      justify-content: center; cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mnav-btn svg { width: 15px; height: 15px; }
+
+    .cal-header-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+    }
+    .cal-count {
+      font-size: 12px; font-weight: 600; color: var(--accent);
+      background: var(--accent-l); border-radius: 20px;
+      padding: 2px 10px; margin-left: auto;
+    }
+
+    /* ── Settings ── */
+    .s-section { margin-bottom: 24px; }
+    .s-title {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px;
+    }
+    .s-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 14px 16px; margin-bottom: 4px;
+    }
+    .s-row label { font-size: 15px; font-weight: 500; }
+    .s-row input[type="time"] {
+      background: transparent; border: none; color: var(--text);
+      font-size: 15px; font-family: inherit; outline: none;
+    }
+    .notif-badge {
+      font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+    }
+    .notif-badge.ok  { background: var(--accent-l); color: var(--accent); }
+    .notif-badge.no  { background: var(--bg); color: var(--muted); border: 1px solid var(--border2); }
+    .notif-badge.bad { background: #fdf0ef; color: var(--danger); }
+    .info {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 14px; font-size: 13px;
+      color: var(--muted); line-height: 1.7; margin-bottom: 4px;
+    }
+    .info strong { color: var(--text); }
+    .info ol { padding-left: 16px; margin-top: 4px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: calc(var(--nav-h) + 14px); left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--text); color: #fff;
+      font-size: 13px; font-weight: 600; padding: 9px 20px;
+      border-radius: 20px; opacity: 0;
+      transition: opacity .2s, transform .2s;
+      pointer-events: none; white-space: nowrap; z-index: 200;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <nav id="nav">
+    <button class="nb active" data-v="summary">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="3" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+      Summary
+    </button>
+    <button class="nb" data-v="chart">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Chart
+    </button>
+    <button class="nb" data-v="add">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Add
+    </button>
+    <button class="nb" data-v="settings">
+      <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </button>
+  </nav>
+
+  <div id="toast"></div>
+
+  <script>
+  // ── Data ──────────────────────────────────────────────────────
+  const KEY = 'ht-data';
+
+  function load() {
+    try {
+      const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+      if (!d) return fresh();
+      return {
+        habits: d.habits || [],
+        logs: d.logs || {},
+        settings: Object.assign({ remindAt: '20:00' }, d.settings || {})
+      };
+    } catch { return fresh(); }
+  }
+  function fresh() { return { habits: [], logs: {}, settings: { remindAt: '20:00' } }; }
+  function save(d) { localStorage.setItem(KEY, JSON.stringify(d)); }
+
+  function today() {
+    const n = new Date();
+    return n.getFullYear() + '-' +
+      String(n.getMonth()+1).padStart(2,'0') + '-' +
+      String(n.getDate()).padStart(2,'0');
+  }
+  function dk(y, m, d) {
+    return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+  }
+  function daysIn(y, m) { return new Date(y, m+1, 0).getDate(); }
+  function uid() { return Math.random().toString(36).slice(2,10); }
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function mlabel(y, m) {
+    return new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  }
+  function mshort(y, m) {
+    return new Date(y,m,1).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  }
+
+  // ── State ─────────────────────────────────────────────────────
+  let view = 'summary';
+  let editId = null;
+  let chartHabit = null;
+  let chartY = new Date().getFullYear();
+  let chartM = new Date().getMonth();
+  const openMonths = new Set();
+
+  // ── Router ────────────────────────────────────────────────────
+  function go(v, opts) {
+    view = v;
+    if (opts && opts.editId !== undefined) editId = opts.editId;
+    document.querySelectorAll('.nb').forEach(b =>
+      b.classList.toggle('active', b.dataset.v === v)
+    );
+    render();
+    window.scrollTo(0, 0);
+  }
+
+  function render() {
+    const app = document.getElementById('app');
+    if (view === 'summary')  app.innerHTML = renderSummary();
+    if (view === 'chart')    app.innerHTML = renderChart();
+    if (view === 'add')      app.innerHTML = renderAdd();
+    if (view === 'settings') app.innerHTML = renderSettings();
+    bind();
+  }
+
+  // ── Calendar builder ──────────────────────────────────────────
+  const DOW = ['S','M','T','W','T','F','S'];
+
+  function buildCal(habitId, color, y, m, logs, tappable) {
+    const todayStr = today();
+    const now = new Date();
+    const total = daysIn(y, m);
+    const firstDow = new Date(y, m, 1).getDay();
+
+    // Day-of-week header row
+    let html = DOW.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    // Empty leading cells
+    for (let i = 0; i < firstDow; i++) {
+      html += `<div class="cal-day empty"><div class="cal-day-inner"></div></div>`;
+    }
+
+    for (let d = 1; d <= total; d++) {
+      const k = dk(y, m, d);
+      const logged  = !!(logs[k] && logs[k][habitId]);
+      const isToday = k === todayStr;
+      const isFut   = new Date(y, m, d) > now;
+
+      let cls = 'cal-day';
+      if (logged)   cls += ' logged';
+      if (isToday)  cls += ' today';
+      if (isFut)    cls += ' future';
+      if (tappable) cls += ' tappable';
+
+      const bg  = logged ? `background:${color}` : '';
+      const dat = tappable ? `data-date="${k}" data-habit="${habitId}"` : '';
+
+      html += `<div class="${cls}" style="${bg}" ${dat}><div class="cal-day-inner">${d}</div></div>`;
+    }
+
+    return `<div class="cal">${html}</div>`;
+  }
+
+  function countLogged(habitId, y, m, logs) {
+    const now = new Date();
+    const isCur = y === now.getFullYear() && m === now.getMonth();
+    const upto  = isCur ? now.getDate() : daysIn(y, m);
+    let n = 0;
+    for (let d = 1; d <= upto; d++) {
+      if (logs[dk(y,m,d)] && logs[dk(y,m,d)][habitId]) n++;
+    }
+    return { logged: n, total: upto };
+  }
+
+  function monthsFor(habit) {
+    const now = new Date();
+    const ey = now.getFullYear(), em = now.getMonth();
+    let sy = ey, sm = em;
+    if (habit.createdAt) {
+      const p = habit.createdAt.split('-');
+      sy = +p[0]; sm = +p[1]-1;
+    }
+    const list = [];
+    let y = sy, m = sm;
+    while (y < ey || (y === ey && m <= em)) {
+      list.push({y, m}); m++; if (m>11){m=0;y++;}
+    }
+    return list;
+  }
+
+  function streak(habitId, logs) {
+    let n = 0;
+    const now = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(now); d.setDate(now.getDate()-i);
+      const k = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+      if (logs[k] && logs[k][habitId]) n++;
+      else if (i > 0) break;
+    }
+    return n;
+  }
+
+  // ── Views ─────────────────────────────────────────────────────
+  const EDIT_IC = `<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+  const CHV_IC  = `<svg class="chevron" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+
+  function renderSummary() {
+    const d = load();
+    if (!d.habits.length) return `
+      <div class="ph"><h1>Summary</h1></div>
+      <div class="empty">
+        <div class="icon">🌱</div>
+        <p>No habits yet.<br><strong>Tap Add</strong> to create your first one.</p>
+      </div>`;
+
+    const blocks = d.habits.map(h => {
+      const s = streak(h.id, d.logs);
+      let totalLogged = 0;
+      Object.values(d.logs).forEach(dl => { if (dl[h.id]) totalLogged++; });
+
+      const rows = [...monthsFor(h)].reverse().map(({y, m}) => {
+        const mk = `${h.id}|${y}|${m}`;
+        const isOpen = openMonths.has(mk);
+        const isCur  = y === new Date().getFullYear() && m === new Date().getMonth();
+        const {logged, total} = countLogged(h.id, y, m, d.logs);
+        const pct = total > 0 ? Math.round(logged/total*100) : 0;
+        const body = isOpen
+          ? `<div class="mrow-body">${buildCal(h.id, h.color, y, m, d.logs, false)}</div>`
+          : '';
+        return `
+          <div class="mrow${isOpen?' open':''}${isCur?' cur':''}" data-mk="${mk}">
+            <div class="mrow-head">
+              <span class="mrow-label">${mshort(y,m)}</span>
+              <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${h.color}"></div></div>
+              <span class="mrow-count">${logged}/${total}</span>
+              ${CHV_IC}
+            </div>
+            ${body}
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="card">
+          <div class="habit-header">
+            <div class="dot" style="background:${h.color}"></div>
+            <div style="flex:1;min-width:0">
+              <div class="habit-name">${esc(h.name)}</div>
+              <div class="habit-meta">${s > 0 ? s+' day streak' : 'No current streak'} &middot; ${totalLogged} days total</div>
+            </div>
+            <button class="edit-btn" data-edit="${h.id}">${EDIT_IC}</button>
+          </div>
+          <div class="month-rows">${rows}</div>
+        </div>`;
+    }).join('');
+
+    return `<div class="ph"><h1>Summary</h1><p>Tap any month to expand</p></div>${blocks}`;
+  }
+
+  function renderChart() {
+    const d = load();
+    if (!d.habits.length) return `
+      <div class="ph"><h1>Chart</h1></div>
+      <div class="empty"><div class="icon">📅</div><p>Add a habit first.</p></div>`;
+
+    if (!chartHabit || !d.habits.find(h => h.id === chartHabit))
+      chartHabit = d.habits[0].id;
+
+    const h = d.habits.find(h => h.id === chartHabit);
+    const tabs = d.habits.map(hh => `
+      <button class="htab${hh.id===chartHabit?' active':''}" data-tab="${hh.id}">${esc(hh.name)}</button>`
+    ).join('');
+    const {logged, total} = countLogged(h.id, chartY, chartM, d.logs);
+    const cal = buildCal(h.id, h.color, chartY, chartM, d.logs, true);
+    const PREV_IC = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
+    const NEXT_IC = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+
+    return `
+      <div class="ph"><h1>Chart</h1><p>Tap any day to log or remove it</p></div>
+      <div class="habit-tabs">${tabs}</div>
+      <div class="month-nav">
+        <button class="mnav-btn" id="prev-m">${PREV_IC}</button>
+        <span>${mlabel(chartY, chartM)}</span>
+        <button class="mnav-btn" id="next-m">${NEXT_IC}</button>
+      </div>
+      <div class="card">
+        <div class="cal-header-row">
+          <div class="dot" style="background:${h.color}"></div>
+          <span style="font-weight:700;font-size:15px">${esc(h.name)}</span>
+          <span class="cal-count">${logged} / ${total}</span>
+        </div>
+        ${cal}
+      </div>`;
+  }
+
+  const COLORS = ['#2d6a4f','#2563eb','#d97706','#dc2626','#7c3aed','#db2777','#0891b2','#ea580c'];
+
+  function renderAdd() {
+    const d = load();
+    const h = editId ? d.habits.find(x => x.id === editId) : null;
+    const name   = h ? h.name : '';
+    const color  = h ? h.color : '#2d6a4f';
+    const remind = h ? (h.remindAt || d.settings.remindAt) : d.settings.remindAt;
+    const swatches = COLORS.map(c =>
+      `<div class="sw${c===color?' on':''}" style="background:${c}" data-c="${c}"></div>`
+    ).join('');
+    return `
+      <div class="ph"><h1>${h ? 'Edit Habit' : 'New Habit'}</h1></div>
+      <form id="hform">
+        <input type="hidden" id="hid" value="${h ? h.id : ''}">
+        <input type="hidden" id="hcolor" value="${color}">
+        <div class="fg">
+          <label>Habit name</label>
+          <input type="text" id="hname" placeholder="e.g. Worked out" value="${esc(name)}" maxlength="40" autocomplete="off" required>
+        </div>
+        <div class="fg">
+          <label>Color</label>
+          <div class="swatches" id="swatches">${swatches}</div>
+        </div>
+        <div class="fg">
+          <label>Daily reminder time</label>
+          <input type="time" id="hremind" value="${remind}">
+        </div>
+        <button type="submit" class="btn-primary">${h ? 'Save changes' : 'Add habit'}</button>
+        <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+        ${h ? `<button type="button" class="btn-danger" id="del-btn" data-id="${h.id}">Delete habit</button>` : ''}
+      </form>`;
+  }
+
+  function renderSettings() {
+    const d = load();
+    const perm = ('Notification' in window) ? Notification.permission : 'denied';
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    const isStandalone = navigator.standalone || matchMedia('(display-mode:standalone)').matches;
+    const badge = perm==='granted'
+      ? `<span class="notif-badge ok">Enabled</span>`
+      : perm==='denied'
+        ? `<span class="notif-badge bad">Blocked</span>`
+        : `<span class="notif-badge no">Off</span>`;
+    const steps = isIOS
+      ? `<ol><li>Open in <strong>Safari</strong></li><li>Tap the <strong>Share</strong> icon</li><li>Tap <strong>Add to Home Screen</strong></li></ol>`
+      : `<ol><li>Open in <strong>Chrome</strong></li><li>Tap <strong>⋮</strong></li><li>Tap <strong>Add to Home Screen</strong></li></ol>`;
+    return `
+      <div class="ph"><h1>Settings</h1></div>
+      <div class="s-section">
+        <div class="s-title">Reminders</div>
+        <div class="s-row"><label>Reminder time</label><input type="time" id="remind-time" value="${d.settings.remindAt}"></div>
+        <div class="s-row"><label>Notifications</label>${badge}</div>
+        ${perm==='default' ? `<button class="btn-primary" id="enable-notif">Enable notifications</button>` : ''}
+        ${perm==='denied' ? `<div class="info" style="margin-top:8px">Blocked in browser. Go to phone Settings → browser → allow notifications for this site.</div>` : ''}
+        <div class="info" style="margin-top:8px"><strong>Note:</strong> Reminders fire while the app is open. Install to your home screen for best results.</div>
+      </div>
+      <div class="s-section">
+        <div class="s-title">Install</div>
+        <div class="info">${isStandalone ? '<strong>✓ Installed on your home screen.</strong>' : steps}</div>
+      </div>
+      <div class="s-section">
+        <div class="s-title">Data</div>
+        <div class="s-row"><label>Habits</label><span>${d.habits.length}</span></div>
+        <button class="btn-danger" id="clear-btn">Clear all data</button>
+      </div>`;
+  }
+
+  // ── Bind events ───────────────────────────────────────────────
+  function bind() {
+    document.querySelectorAll('.nb').forEach(b => { b.onclick = () => go(b.dataset.v); });
+    if (view === 'summary')  bindSummary();
+    if (view === 'chart')    bindChart();
+    if (view === 'add')      bindAdd();
+    if (view === 'settings') bindSettings();
+  }
+
+  function bindSummary() {
+    document.querySelectorAll('[data-edit]').forEach(btn => {
+      btn.onclick = e => { e.stopPropagation(); go('add', {editId: btn.dataset.edit}); };
+    });
+    document.querySelectorAll('.mrow').forEach(row => {
+      row.onclick = () => {
+        const mk = row.dataset.mk;
+        if (openMonths.has(mk)) openMonths.delete(mk); else openMonths.add(mk);
+        render();
+      };
+    });
+  }
+
+  function bindChart() {
+    document.querySelectorAll('.htab').forEach(btn => {
+      btn.onclick = () => { chartHabit = btn.dataset.tab; render(); };
+    });
+    const pm = document.getElementById('prev-m');
+    const nm = document.getElementById('next-m');
+    if (pm) pm.onclick = () => { chartM--; if(chartM<0){chartM=11;chartY--;} render(); };
+    if (nm) nm.onclick = () => { chartM++; if(chartM>11){chartM=0;chartY++;} render(); };
+    document.querySelectorAll('.cal-day.tappable').forEach(cell => {
+      cell.onclick = () => {
+        const d = load();
+        const date = cell.dataset.date;
+        const hid  = cell.dataset.habit;
+        if (!d.logs[date]) d.logs[date] = {};
+        const was = !!d.logs[date][hid];
+        d.logs[date][hid] = !was;
+        save(d);
+        render();
+        toast(was ? 'Removed' : 'Logged ✓');
+      };
+    });
+  }
+
+  function bindAdd() {
+    document.querySelectorAll('.sw').forEach(sw => {
+      sw.onclick = () => {
+        document.querySelectorAll('.sw').forEach(s => s.classList.remove('on'));
+        sw.classList.add('on');
+        document.getElementById('hcolor').value = sw.dataset.c;
+      };
+    });
+    const cc = document.getElementById('cancel-btn');
+    if (cc) cc.onclick = () => { editId = null; go('summary'); };
+    const dd = document.getElementById('del-btn');
+    if (dd) dd.onclick = () => {
+      if (!confirm('Delete this habit? All logs will be removed.')) return;
+      const d = load(); const id = dd.dataset.id;
+      d.habits = d.habits.filter(h => h.id !== id);
+      Object.keys(d.logs).forEach(k => { delete d.logs[k][id]; });
+      save(d); editId = null; go('summary'); toast('Habit deleted');
+    };
+    const form = document.getElementById('hform');
+    if (form) form.onsubmit = e => {
+      e.preventDefault();
+      const name   = document.getElementById('hname').value.trim();
+      const color  = document.getElementById('hcolor').value;
+      const remind = document.getElementById('hremind').value;
+      const hid    = document.getElementById('hid').value;
+      if (!name) return;
+      const d = load();
+      if (hid) {
+        const h = d.habits.find(x => x.id === hid);
+        if (h) { h.name = name; h.color = color; h.remindAt = remind; }
+      } else {
+        d.habits.push({ id: uid(), name, color, remindAt: remind, createdAt: today() });
+      }
+      save(d); editId = null; go('summary'); toast(hid ? 'Updated!' : 'Habit added!');
+    };
+  }
+
+  function bindSettings() {
+    const rt = document.getElementById('remind-time');
+    if (rt) rt.onchange = () => {
+      const d = load(); d.settings.remindAt = rt.value; save(d); scheduleNotif(); toast('Saved');
+    };
+    const en = document.getElementById('enable-notif');
+    if (en) en.onclick = async () => {
+      const p = await Notification.requestPermission();
+      if (p === 'granted') { scheduleNotif(); toast('Notifications enabled!'); }
+      else toast('Permission denied');
+      render();
+    };
+    const cl = document.getElementById('clear-btn');
+    if (cl) cl.onclick = () => {
+      if (!confirm('Delete ALL habits and logs? This cannot be undone.')) return;
+      localStorage.removeItem(KEY); go('summary'); toast('Cleared');
+    };
+  }
+
+  // ── Toast ─────────────────────────────────────────────────────
+  let toastT;
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    clearTimeout(toastT);
+    toastT = setTimeout(() => el.classList.remove('show'), 2000);
+  }
+
+  // ── Notifications ─────────────────────────────────────────────
+  let notifT;
+  function scheduleNotif() {
+    if (!('Notification' in window) || Notification.permission !== 'granted') return;
+    clearTimeout(notifT);
+    const d = load();
+    const [h, mn] = (d.settings.remindAt || '20:00').split(':').map(Number);
+    const now = new Date(), fire = new Date();
+    fire.setHours(h, mn, 0, 0);
+    if (fire <= now) fire.setDate(fire.getDate() + 1);
+    notifT = setTimeout(async () => {
+      const reg = await navigator.serviceWorker.ready;
+      reg.showNotification('Habit Tracker', { body: 'Time to log your habits!', tag: 'ht' });
+      scheduleNotif();
+    }, fire - now);
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
+  scheduleNotif();
+  go('summary');
+  </script>
+</body>
+</html>
