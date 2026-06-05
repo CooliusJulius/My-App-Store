@@ -1,348 +1,319 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>StreakBoard — Build Better Habits</title>
-    <meta name="description" content="Track your daily habits with GitHub-style contribution graphs. Visual, simple, motivating." />
-    <meta property="og:title" content="StreakBoard" />
-    <meta property="og:description" content="Track daily habits with beautiful contribution charts." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300..800&display=swap" rel="stylesheet" />
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="./assets/index-Yu8HkO5q.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-dCgXdHvF.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  <script data-pplx-inline-edit>
-(function () {
-  if (window === window.top) return;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0f0f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="StreakBoard" />
+  <title>StreakBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg:#0f0f0f; --bg2:#1a1a1a; --bg3:#242424; --border:#2e2e2e; --text:#f0f0f0; --muted:#777; --nav-h:62px; }
+    html,body { background:var(--bg); color:var(--text); font-family:'Inter',system-ui,sans-serif; font-size:15px; line-height:1.5; -webkit-font-smoothing:antialiased; overscroll-behavior:none; height:100%; }
 
-  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
-  const MAX_FONT_BYTES = 500 * 1024;
-  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
-  let scrollForwarding = false;
-  let scrollRaf = 0;
-  let trustedTopOrigin = null;
+    #app { max-width:430px; margin:0 auto; padding:28px 16px calc(var(--nav-h) + 24px); min-height:100vh; }
 
-  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
-  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
-  // across multiple labels.
-  function matchesAllowedOrigin(origin) {
-    if (!origin) return false;
-    for (const entry of allowedParentOrigins) {
-      if (!entry.includes("*")) {
-        if (entry === origin) return true;
-        continue;
-      }
-      const pattern = new RegExp(
-        "^" +
-          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
-          "$",
-      );
-      if (pattern.test(origin)) return true;
-    }
-    return false;
+    #nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); background:var(--bg2); border-top:1px solid var(--border); display:flex; justify-content:space-around; align-items:center; z-index:100; padding-bottom:env(safe-area-inset-bottom,0px); }
+    .nb { display:flex; flex-direction:column; align-items:center; gap:3px; background:none; border:none; color:var(--muted); cursor:pointer; padding:8px 20px; border-radius:8px; font-family:inherit; font-size:11px; font-weight:600; letter-spacing:.02em; -webkit-tap-highlight-color:transparent; transition:color .15s; }
+    .nb svg { width:21px; height:21px; }
+    .nb.active { color:var(--text); }
+
+    .ph { margin-bottom:24px; }
+    .ph h1 { font-size:26px; font-weight:800; letter-spacing:-.5px; }
+    .ph p { font-size:13px; color:var(--muted); margin-top:3px; }
+
+    .empty { text-align:center; padding:60px 16px; color:var(--muted); }
+    .empty .icon { font-size:48px; margin-bottom:16px; }
+    .empty p { font-size:15px; line-height:1.7; }
+
+    /* Dashboard cards */
+    .habit-card { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:16px; margin-bottom:10px; -webkit-tap-highlight-color:transparent; transition:border-color .15s; }
+    .habit-card.logged { border-color:var(--hc); }
+    .card-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+    .card-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+    .card-info { flex:1; min-width:0; }
+    .card-name { font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .card-name:hover { opacity:.8; }
+    .card-streak { font-size:12px; color:var(--muted); margin-top:2px; }
+    .card-streak b { color:var(--text); }
+    .log-btn { width:40px; height:40px; border-radius:50%; border:2px solid var(--border); background:transparent; color:var(--muted); display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:all .15s; }
+    .log-btn.on { background:var(--hc); border-color:var(--hc); color:#000; }
+    .log-btn svg { width:18px; height:18px; }
+    .streak-bar { display:flex; gap:3px; height:6px; margin-bottom:14px; }
+    .pip { flex:1; border-radius:2px; background:var(--border); }
+    .pip.on { background:var(--hc); }
+    .stats-row { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .stat { background:var(--bg3); border-radius:10px; padding:10px 8px; text-align:center; }
+    .stat-val { font-size:20px; font-weight:800; }
+    .stat-lbl { font-size:10px; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:.06em; }
+
+    /* Habits list */
+    .habit-row { display:flex; align-items:center; gap:12px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:8px; }
+    .habit-row-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+    .habit-row-name { flex:1; font-size:15px; font-weight:600; }
+    .edit-btn { width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); display:flex; align-items:center; justify-content:center; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .edit-btn svg { width:14px; height:14px; }
+    .add-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; background:var(--bg2); border:1px dashed var(--border); border-radius:12px; padding:14px; color:var(--muted); font-size:14px; font-weight:600; font-family:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent; margin-top:4px; }
+
+    /* Calendar */
+    .cal-hdr { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+    .cal-ico { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .cal-ttl { font-size:17px; font-weight:700; flex:1; }
+    .back-btn { background:none; border:1px solid var(--border); border-radius:8px; color:var(--muted); padding:6px 12px; font-size:13px; font-weight:600; font-family:inherit; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .mnav { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+    .mnav span { font-size:15px; font-weight:700; }
+    .mnav-btn { width:34px; height:34px; border-radius:8px; border:1px solid var(--border); background:var(--bg2); color:var(--text); display:flex; align-items:center; justify-content:center; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .mnav-btn svg { width:14px; height:14px; }
+    .cal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .dow { font-size:10px; font-weight:600; color:var(--muted); text-align:center; padding-bottom:4px; }
+    .cday { position:relative; width:100%; padding-bottom:100%; border-radius:6px; background:var(--bg3); border:1px solid var(--border); overflow:hidden; }
+    .cday-in { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:500; color:var(--muted); }
+    .cday.empty { background:transparent; border-color:transparent; }
+    .cday.logged .cday-in { color:#000; font-weight:700; }
+    .cday.today { box-shadow:0 0 0 2px var(--text); }
+    .cday.future { opacity:.25; }
+    .cal-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:16px; }
+    .cstat { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:12px 8px; text-align:center; }
+    .cstat-val { font-size:22px; font-weight:800; }
+    .cstat-lbl { font-size:10px; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:.06em; }
+
+    /* Modal */
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; display:flex; align-items:flex-end; }
+    .modal { background:var(--bg2); border-radius:20px 20px 0 0; width:100%; max-width:430px; margin:0 auto; padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px)); max-height:90vh; overflow-y:auto; }
+    .modal-ttl { font-size:20px; font-weight:800; margin-bottom:20px; }
+    .fg { margin-bottom:16px; }
+    .fg label { display:block; font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; margin-bottom:7px; }
+    .fg input[type=text], .fg input[type=time] { width:100%; background:var(--bg3); border:1px solid var(--border); border-radius:10px; color:var(--text); padding:12px 14px; font-size:15px; font-family:inherit; outline:none; -webkit-appearance:none; }
+    .fg input:focus { border-color:#555; }
+    .fg input::placeholder { color:var(--muted); }
+    .emoji-grid { display:grid; grid-template-columns:repeat(8,1fr); gap:6px; }
+    .eopt { aspect-ratio:1; border-radius:10px; background:var(--bg3); border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:20px; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+    .eopt.on { border-color:var(--text); }
+    .color-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .copt { width:32px; height:32px; border-radius:50%; border:3px solid transparent; cursor:pointer; -webkit-tap-highlight-color:transparent; transition:transform .1s; }
+    .copt.on { border-color:#fff; transform:scale(1.18); }
+    .mbtns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+    .btn-save { background:#fff; color:#000; font-size:15px; font-weight:700; font-family:inherit; border:none; border-radius:10px; padding:14px; cursor:pointer; }
+    .btn-cancel { background:transparent; color:var(--muted); font-size:15px; font-weight:600; font-family:inherit; border:1px solid var(--border); border-radius:10px; padding:13px; cursor:pointer; }
+    .btn-del { background:transparent; color:#ef4444; font-size:15px; font-weight:600; font-family:inherit; border:1px solid #ef4444; border-radius:10px; padding:13px; cursor:pointer; margin-top:4px; }
+
+    #toast { position:fixed; bottom:calc(var(--nav-h)+14px); left:50%; transform:translateX(-50%) translateY(8px); background:#fff; color:#000; font-size:13px; font-weight:700; padding:9px 20px; border-radius:20px; opacity:0; transition:opacity .2s,transform .2s; pointer-events:none; white-space:nowrap; z-index:300; }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav">
+  <button class="nb active" data-v="dashboard">
+    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+    Dashboard
+  </button>
+  <button class="nb" data-v="habits">
+    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="3" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="3" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
+    Habits
+  </button>
+</nav>
+<div id="toast"></div>
+<script>
+const KEY='streakboard-v1';
+const COLORS=['#22c55e','#f97316','#06b6d4','#a855f7','#ef4444','#eab308','#3b82f6','#ec4899'];
+const EMOJIS=['🏃','💪','📚','🧘','💧','🥗','😴','✍️','🎯','🎨','🎸','🏊','🚴','🧹','💊','🌿','🔥','⭐','🧠','❤️','☀️','🌙','🍎','☕'];
+const DOW=['S','M','T','W','T','F','S'];
+
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return{habits:[],logs:{}};return{habits:d.habits||[],logs:d.logs||{}};}catch{return{habits:[],logs:{}};}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function today(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+function dk(y,m,d){return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');}
+function daysIn(y,m){return new Date(y,m+1,0).getDate();}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function mlabel(y,m){return new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});}
+
+function getStreaks(hid,logs){
+  const hlogs=logs[hid]||{};
+  const entries=Object.keys(hlogs).filter(k=>hlogs[k]).sort();
+  if(!entries.length)return{current:0,longest:0,total:0};
+  let longest=1,run=1;
+  for(let i=1;i<entries.length;i++){
+    const diff=(new Date(entries[i])-new Date(entries[i-1]))/86400000;
+    if(diff===1){run++;longest=Math.max(longest,run);}else{run=1;}
   }
-
-  // Trust decision: when the sender is same-origin-visible (event.origin is a
-  // real origin like https://www.perplexity.ai) we trust event.origin directly.
-  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
-  // broker's stamped `parentOrigin` to identify the top window. The fallback
-  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
-  // on the response path (see postToTrustedTop) to ensure replies can't be
-  // delivered to anyone but the actual top window of that claimed origin.
-  function getTrustedParentOrigin(event) {
-    const forwardedParentOrigin =
-      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
-    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
-    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  longest=Math.max(longest,run);
+  let current=0;
+  const now=new Date();
+  for(let i=0;i<365;i++){
+    const d=new Date(now);d.setDate(now.getDate()-i);
+    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(hlogs[k]){current++;}else if(i>0){break;}
   }
+  return{current,longest,total:entries.length};
+}
 
-  // All responses go to window.top with targetOrigin = the allowlisted origin.
-  // An attacker that iframes us inside their own null-origin broker can claim
-  // any parentOrigin they like, but the browser will drop the reply whenever
-  // the real top's origin doesn't match — so the screenshot never leaves.
-  function postToTrustedTop(message) {
-    if (!trustedTopOrigin) return;
-    try {
-      window.top.postMessage(message, trustedTopOrigin);
-    } catch (_error) {}
+function getLast7(hid,logs){
+  const r=[];
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');r.push(!!(logs[hid]&&logs[hid][k]));}
+  return r;
+}
+
+let view='dashboard',calHid=null,calY=new Date().getFullYear(),calM=new Date().getMonth();
+let modalOpen=false,editId=null,mName='',mIcon='🔥',mColor='#22c55e',mRemind='20:00';
+
+function go(v,opts){
+  view=v;
+  if(opts&&opts.calHid){calHid=opts.calHid;calY=new Date().getFullYear();calM=new Date().getMonth();}
+  document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('active',b.dataset.v===v));
+  render();window.scrollTo(0,0);
+}
+
+function render(){
+  const app=document.getElementById('app');
+  if(view==='dashboard')app.innerHTML=renderDash();
+  if(view==='habits')app.innerHTML=renderHabits();
+  if(view==='calendar')app.innerHTML=renderCal();
+  renderModal();bind();
+}
+
+const CHECK=`<svg fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`;
+const EDIT_IC=`<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+
+function renderDash(){
+  const d=load();
+  if(!d.habits.length)return`<div class="ph"><h1>StreakBoard</h1></div><div class="empty"><div class="icon">🔥</div><p>No habits yet.<br>Go to <strong>Habits</strong> to add your first one.</p></div>`;
+  const t=today();
+  return`<div class="ph"><h1>StreakBoard</h1><p>Tap ✓ to log &middot; Tap name to see chart</p></div>`+
+  d.habits.map(h=>{
+    const{current,longest,total}=getStreaks(h.id,d.logs);
+    const last7=getLast7(h.id,d.logs);
+    const logged=!!(d.logs[h.id]&&d.logs[h.id][t]);
+    const pips=last7.map(on=>`<div class="pip${on?' on':''}"></div>`).join('');
+    return`<div class="habit-card${logged?' logged':''}" style="--hc:${h.color}">
+      <div class="card-top">
+        <div class="card-icon" style="background:${h.color}22">${h.icon}</div>
+        <div class="card-info">
+          <div class="card-name" data-cal="${h.id}">${esc(h.name)}</div>
+          <div class="card-streak"><b>${current}</b> day streak &middot; ${total} total</div>
+        </div>
+        <button class="log-btn${logged?' on':''}" style="--hc:${h.color}" data-log="${h.id}">${logged?CHECK:''}</button>
+      </div>
+      <div class="streak-bar">${pips}</div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-val">${current}</div><div class="stat-lbl">Current</div></div>
+        <div class="stat"><div class="stat-val">${longest}</div><div class="stat-lbl">Longest</div></div>
+        <div class="stat"><div class="stat-val">${total}</div><div class="stat-lbl">Total</div></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderHabits(){
+  const d=load();
+  const rows=d.habits.map(h=>`<div class="habit-row"><div class="habit-row-icon" style="background:${h.color}22">${h.icon}</div><div class="habit-row-name">${esc(h.name)}</div><button class="edit-btn" data-edit="${h.id}">${EDIT_IC}</button></div>`).join('');
+  return`<div class="ph"><h1>Habits</h1><p>${d.habits.length} habit${d.habits.length!==1?'s':''}</p></div>${rows}<button class="add-btn" id="open-add"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add habit</button>`;
+}
+
+function renderCal(){
+  const d=load();
+  const h=d.habits.find(x=>x.id===calHid);
+  if(!h)return renderDash();
+  const todayStr=today(),now=new Date(),total=daysIn(calY,calM),firstDow=new Date(calY,calM,1).getDay();
+  const{current,longest,total:tot}=getStreaks(h.id,d.logs);
+  const PREV=`<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
+  const NEXT=`<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+  let calH=DOW.map(d=>`<div class="dow">${d}</div>`).join('');
+  for(let i=0;i<firstDow;i++)calH+=`<div class="cday empty"><div class="cday-in"></div></div>`;
+  for(let day=1;day<=total;day++){
+    const k=dk(calY,calM,day),logged=!!(d.logs[h.id]&&d.logs[h.id][k]),isT=k===todayStr,isFut=new Date(calY,calM,day)>now;
+    let cls='cday';if(logged)cls+=' logged';if(isT)cls+=' today';if(isFut)cls+=' future';
+    calH+=`<div class="${cls}" style="${logged?'background:'+h.color:''}"><div class="cday-in">${day}</div></div>`;
   }
+  return`<div class="cal-hdr"><div class="cal-ico" style="background:${h.color}22">${h.icon}</div><div class="cal-ttl">${esc(h.name)}</div><button class="back-btn" id="cal-back">← Back</button></div>
+    <div class="mnav"><button class="mnav-btn" id="cal-prev">${PREV}</button><span>${mlabel(calY,calM)}</span><button class="mnav-btn" id="cal-next">${NEXT}</button></div>
+    <div class="cal">${calH}</div>
+    <div class="cal-stats">
+      <div class="cstat"><div class="cstat-val" style="color:${h.color}">${current}</div><div class="cstat-lbl">Current</div></div>
+      <div class="cstat"><div class="cstat-val" style="color:${h.color}">${longest}</div><div class="cstat-lbl">Longest</div></div>
+      <div class="cstat"><div class="cstat-val" style="color:${h.color}">${tot}</div><div class="cstat-lbl">Total</div></div>
+    </div>`;
+}
 
-  function inlineAll(original, clone) {
-    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+function renderModal(){
+  let el=document.getElementById('modal-overlay');
+  if(!modalOpen){if(el)el.remove();return;}
+  if(!el){el=document.createElement('div');el.id='modal-overlay';el.className='overlay';document.body.appendChild(el);}
+  const isEdit=!!editId;
+  const emojis=EMOJIS.map(e=>`<div class="eopt${e===mIcon?' on':''}" data-emoji="${e}">${e}</div>`).join('');
+  const colors=COLORS.map(c=>`<div class="copt${c===mColor?' on':''}" style="background:${c}" data-color="${c}"></div>`).join('');
+  el.innerHTML=`<div class="modal">
+    <div class="modal-ttl">${isEdit?'Edit habit':'New habit'}</div>
+    <div class="fg"><label>Name</label><input type="text" id="m-name" placeholder="e.g. Morning run" value="${esc(mName)}" maxlength="40" autocomplete="off"></div>
+    <div class="fg"><label>Icon</label><div class="emoji-grid">${emojis}</div></div>
+    <div class="fg"><label>Color</label><div class="color-row">${colors}</div></div>
+    <div class="fg"><label>Reminder</label><input type="time" id="m-remind" value="${mRemind}"></div>
+    <div class="mbtns">
+      <button class="btn-save" id="m-save">${isEdit?'Save changes':'Add habit'}</button>
+      <button class="btn-cancel" id="m-cancel">Cancel</button>
+      ${isEdit?`<button class="btn-del" id="m-del">Delete habit</button>`:''}
+    </div>
+  </div>`;
+  // Modal events
+  document.querySelectorAll('.eopt').forEach(el=>el.onclick=()=>{mIcon=el.dataset.emoji;document.querySelectorAll('.eopt').forEach(e=>e.classList.remove('on'));el.classList.add('on');});
+  document.querySelectorAll('.copt').forEach(el=>el.onclick=()=>{mColor=el.dataset.color;document.querySelectorAll('.copt').forEach(e=>e.classList.remove('on'));el.classList.add('on');});
+  document.getElementById('m-save').onclick=()=>{
+    const name=document.getElementById('m-name').value.trim();
+    const remind=document.getElementById('m-remind').value;
+    if(!name)return;
+    const d=load();
+    if(editId){const h=d.habits.find(x=>x.id===editId);if(h){h.name=name;h.icon=mIcon;h.color=mColor;h.remindAt=remind;}}
+    else{d.habits.push({id:uid(),name,icon:mIcon,color:mColor,remindAt:remind,createdAt:today()});}
+    save(d);closeModal();render();toast(editId?'Updated!':'Habit added!');
+  };
+  document.getElementById('m-cancel').onclick=closeModal;
+  const del=document.getElementById('m-del');
+  if(del)del.onclick=()=>{
+    if(!confirm('Delete this habit and all its logs?'))return;
+    const d=load();const id=editId;d.habits=d.habits.filter(h=>h.id!==id);delete d.logs[id];
+    save(d);closeModal();if(view==='calendar')go('dashboard');else render();toast('Deleted');
+  };
+}
 
-    try {
-      const computedStyle = getComputedStyle(original);
-      // cssText on a computed style is the serialized declaration in modern
-      // Chromium/Safari — a single read beats enumerating ~400 longhand
-      // properties. Firefox returns "" here, so we fall back on empty.
-      const serialized = computedStyle.cssText;
-      if (serialized) {
-        clone.style.cssText = serialized;
-      } else {
-        const parts = new Array(computedStyle.length);
-        for (let index = 0; index < computedStyle.length; index += 1) {
-          const property = computedStyle[index];
-          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
-        }
-        clone.style.cssText = parts.join("");
-      }
-    } catch (_error) {}
+function openModal(hid){
+  const d=load();editId=hid||null;
+  if(hid){const h=d.habits.find(x=>x.id===hid);if(h){mName=h.name;mIcon=h.icon;mColor=h.color;mRemind=h.remindAt||'20:00';}}
+  else{mName='';mIcon='🔥';mColor='#22c55e';mRemind='20:00';}
+  modalOpen=true;renderModal();
+}
+function closeModal(){modalOpen=false;editId=null;renderModal();}
 
-    const originalChildren = original.children;
-    const clonedChildren = clone.children;
-    for (
-      let index = 0;
-      index < originalChildren.length && index < clonedChildren.length;
-      index += 1
-    ) {
-      inlineAll(originalChildren[index], clonedChildren[index]);
-    }
-  }
-
-  function extractFontUrl(srcValue) {
-    const matches = [
-      ...srcValue.matchAll(
-        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
-      ),
-    ];
-    if (matches.length === 0) return null;
-    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
-    if (woff2) return woff2[1];
-    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
-    if (woff) return woff[1];
-    return matches[0][1];
-  }
-
-  // Cache resolved font URL -> data URI across captures. Fonts on a page
-  // essentially never change, and a batch run emits multiple captures back to
-  // back — without this we'd refetch + re-base64 every time.
-  const fontDataUriCache = new Map();
-  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
-
-  async function fetchAsDataUri(url) {
-    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
-    let dataUri = null;
-    try {
-      const response = await fetch(url, { mode: "cors", credentials: "omit" });
-      if (response.ok) {
-        const blob = await response.blob();
-        if (blob.size <= MAX_FONT_BYTES) {
-          dataUri = await new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () =>
-              resolve(typeof reader.result === "string" ? reader.result : null);
-            reader.onerror = () => resolve(null);
-            reader.readAsDataURL(blob);
-          });
-        }
-      }
-    } catch (_error) {
-      dataUri = null;
-    }
-    fontDataUriCache.set(url, dataUri);
-    return dataUri;
-  }
-
-  function collectFontFaceRuleTexts() {
-    const rules = [];
-    for (const sheet of document.styleSheets) {
-      let cssRules;
-      try {
-        cssRules = sheet.cssRules;
-      } catch (_error) {
-        continue;
-      }
-      if (!cssRules) continue;
-      for (const rule of cssRules) {
-        const cssText = rule.cssText || "";
-        if (cssText.startsWith("@font-face")) rules.push(cssText);
-      }
-    }
-    return rules;
-  }
-
-  async function buildInlinedFontCss() {
-    const ruleTexts = collectFontFaceRuleTexts();
-    if (ruleTexts.length === 0) return null;
-
-    const resolved = ruleTexts.map((cssText) => {
-      if (!SRC_DECLARATION_RE.test(cssText)) return null;
-      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
-      if (!srcMatch) return null;
-      const url = extractFontUrl(srcMatch[1]);
-      if (!url) return null;
-      try {
-        return { cssText, url: new URL(url, document.baseURI).href };
-      } catch (_error) {
-        return null;
-      }
+function bind(){
+  document.querySelectorAll('.nb').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  if(view==='dashboard'){
+    document.querySelectorAll('[data-log]').forEach(btn=>btn.onclick=e=>{
+      e.stopPropagation();const d=load();const hid=btn.dataset.log;const t=today();
+      if(!d.logs[hid])d.logs[hid]={};const was=!!d.logs[hid][t];d.logs[hid][t]=!was;
+      save(d);render();toast(was?'Removed':'Logged ✓');
     });
-
-    const dataUris = await Promise.all(
-      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
-    );
-
-    const inlined = [];
-    let totalBytes = 0;
-    for (let index = 0; index < resolved.length; index += 1) {
-      const entry = resolved[index];
-      const dataUri = dataUris[index];
-      if (!entry || !dataUri) continue;
-      const approxBytes = dataUri.length * 0.75;
-      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
-      totalBytes += approxBytes;
-      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
-    }
-    return inlined.length > 0 ? inlined.join("\n") : null;
+    document.querySelectorAll('[data-cal]').forEach(el=>el.onclick=e=>{e.stopPropagation();go('calendar',{calHid:el.dataset.cal});});
   }
-
-  function stripExternal(clone) {
-    const images = clone.querySelectorAll("img");
-    for (let index = 0; index < images.length; index += 1) {
-      const src = images[index].getAttribute("src");
-      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
-    }
-
-    const elements = clone.querySelectorAll("*");
-    for (let index = 0; index < elements.length; index += 1) {
-      const style = elements[index].style.cssText;
-      if (style && style.includes("url(")) {
-        elements[index].style.cssText = style.replace(
-          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
-          "none",
-        );
-      }
-    }
+  if(view==='habits'){
+    document.getElementById('open-add').onclick=()=>openModal(null);
+    document.querySelectorAll('[data-edit]').forEach(btn=>btn.onclick=()=>openModal(btn.dataset.edit));
   }
-
-  function emitScroll() {
-    scrollRaf = 0;
-    if (!scrollForwarding) return;
-    postToTrustedTop({
-      type: "INLINE_EDIT_SCROLL",
-      scrollX: window.scrollX,
-      scrollY: window.scrollY,
-    });
+  if(view==='calendar'){
+    document.getElementById('cal-back').onclick=()=>go('dashboard');
+    document.getElementById('cal-prev').onclick=()=>{calM--;if(calM<0){calM=11;calY--;}render();};
+    document.getElementById('cal-next').onclick=()=>{calM++;if(calM>11){calM=0;calY++;}render();};
   }
+}
 
-  window.addEventListener(
-    "scroll",
-    function () {
-      if (!scrollForwarding || scrollRaf) return;
-      scrollRaf = requestAnimationFrame(emitScroll);
-    },
-    { passive: true, capture: true },
-  );
+let toastT;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2000);}
 
-  async function handleCaptureRequest(event) {
-    const requestId = event.data.requestId;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-
-    function postResult(dataUrl) {
-      postToTrustedTop({
-        type: "INLINE_EDIT_SCREENSHOT_RESULT",
-        requestId,
-        dataUrl,
-        scrollX,
-        scrollY,
-      });
-    }
-
-    try {
-      // Wait for any pending web fonts to resolve so both inline metrics and
-      // the @font-face inlining below see the same loaded faces.
-      if (document.fonts && document.fonts.ready) {
-        try {
-          await document.fonts.ready;
-        } catch (_error) {}
-      }
-
-      const clone = document.documentElement.cloneNode(true);
-      inlineAll(document.documentElement, clone);
-
-      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
-      for (let index = 0; index < removedNodes.length; index += 1) {
-        removedNodes[index].remove();
-      }
-
-      stripExternal(clone);
-
-      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
-      // can resolve them — external font URLs aren't fetched during
-      // foreignObject rendering, which would otherwise force a fallback face
-      // and change text metrics.
-      const inlinedFontCss = await buildInlinedFontCss();
-      if (inlinedFontCss) {
-        const styleEl = document.createElement("style");
-        styleEl.textContent = inlinedFontCss;
-        const head = clone.querySelector("head");
-        if (head) head.appendChild(styleEl);
-        else clone.insertBefore(styleEl, clone.firstChild);
-      }
-
-      const html = new XMLSerializer().serializeToString(clone);
-      const svg =
-        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
-        '<foreignObject width="100%" height="100%">' +
-        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
-        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
-        html +
-        "</div></div></foreignObject></svg>";
-      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
-      const image = new Image();
-      image.onload = function () {
-        const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(image, 0, 0);
-        postResult(canvas.toDataURL("image/png"));
-      };
-      image.onerror = function () {
-        postResult(null);
-      };
-      image.src = svgUrl;
-    } catch (_error) {
-      postResult(null);
-    }
-  }
-
-  window.addEventListener("message", function (event) {
-    if (!event.data) return;
-    // Only accept messages from the direct parent frame. Blocks sibling /
-    // unrelated-window postMessage senders that could otherwise reach us.
-    if (event.source !== window.parent) return;
-
-    const trustedParentOrigin = getTrustedParentOrigin(event);
-    if (!trustedParentOrigin) return;
-    trustedTopOrigin = trustedParentOrigin;
-
-    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
-      scrollForwarding = true;
-      emitScroll();
-      return;
-    }
-
-    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
-      scrollForwarding = false;
-      if (scrollRaf) cancelAnimationFrame(scrollRaf);
-      scrollRaf = 0;
-      return;
-    }
-
-    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
-
-    handleCaptureRequest(event);
-  });
-})();
-
-
-</script></body>
+go('dashboard');
+</script>
+</body>
 </html>
