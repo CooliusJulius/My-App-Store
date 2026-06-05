@@ -1,91 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!--
-       ______                            __
-      / ____/___  ____ ___  ____  __  __/ /____  _____
-     / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-    / /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-    \____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                        /_/
-            Created with Perplexity Computer
-            https://www.perplexity.ai/computer
-    -->
-    <meta name="generator" content="Perplexity Computer">
-    <meta name="author" content="Perplexity Computer">
-    <meta property="og:see_also" content="https://www.perplexity.ai/computer">
-    <link rel="author" href="https://www.perplexity.ai/computer">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-CzwQK16o.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BfYYzn9J.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  <script data-pplx-inline-edit>
-(function(){
-  if(window===window.top)return;
-  function inlineAll(orig,clone){
-    if(orig.nodeType!==1)return;
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#0a0a0f"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>NSE Portfolio Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--border:#222230;--text:#e8e8f0;--muted:#555568;--green:#06D6A0;--red:#FF6B6B;--yellow:#FFD166;--nav-h:58px;}
+    html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overscroll-behavior:none;height:100%;}
+    #nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:var(--bg2);border-top:1px solid var(--border);display:flex;justify-content:space-around;align-items:center;z-index:100;padding-bottom:env(safe-area-inset-bottom,0px);}
+    .nb{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;color:var(--muted);cursor:pointer;padding:6px 16px;font-family:inherit;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;-webkit-tap-highlight-color:transparent;transition:color .15s;}
+    .nb svg{width:20px;height:20px;}
+    .nb.active{color:var(--green);}
+    #app{max-width:480px;margin:0 auto;padding:0 0 calc(var(--nav-h)+16px);}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 0;}
+    .topbar-title{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;letter-spacing:.04em;}
+    .market-badge{font-size:10px;font-weight:700;letter-spacing:.1em;padding:3px 8px;border-radius:4px;}
+    .market-badge.open{background:rgba(6,214,160,.15);color:var(--green);}
+    .market-badge.closed{background:rgba(255,107,107,.1);color:var(--red);}
+    .clock{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;}
+    .summary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:12px 16px;}
+    .sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+    .sum-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
+    .sum-val{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;}
+    .sum-sub{font-size:11px;margin-top:2px;}
+    .section{padding:0 16px;}
+    .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+    .icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .icon-btn svg{width:14px;height:14px;}
+    .holding-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;}
+    .hc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
+    .hc-sym{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;}
+    .hc-name{font-size:11px;color:var(--muted);margin-top:2px;}
+    .hc-sector{font-size:10px;background:var(--bg3);border-radius:4px;padding:2px 7px;color:var(--muted);margin-top:4px;display:inline-block;}
+    .hc-ltp{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;text-align:right;}
+    .hc-chg{font-size:12px;font-weight:600;margin-top:2px;text-align:right;}
+    .hc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding-top:10px;border-top:1px solid var(--border);}
+    .hc-field{text-align:center;}
+    .hc-field-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+    .hc-field-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;margin-top:3px;}
+    .hc-actions{display:flex;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+    .del-btn{flex:1;background:rgba(255,107,107,.1);color:var(--red);border:1px solid rgba(255,107,107,.2);border-radius:8px;padding:8px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .wl-card{display:flex;align-items:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;gap:12px;}
+    .wl-sym{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;}
+    .wl-name{font-size:11px;color:var(--muted);}
+    .wl-ltp{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;text-align:right;}
+    .wl-chg{font-size:11px;font-weight:600;margin-top:1px;text-align:right;}
+    .wl-del{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+    .wl-del svg{width:12px;height:12px;}
+    .add-panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;}
+    .add-panel-title{font-size:13px;font-weight:700;margin-bottom:14px;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+    .fg{display:flex;flex-direction:column;gap:4px;}
+    .fg label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+    .fg input,.fg select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px 12px;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none;-webkit-appearance:none;width:100%;}
+    .fg input:focus,.fg select:focus{border-color:#333345;}
+    .fg input::placeholder{color:var(--muted);}
+    .fg select option{background:var(--bg3);}
+    .btn-primary{width:100%;background:var(--green);color:#000;font-size:13px;font-weight:700;font-family:inherit;border:none;border-radius:8px;padding:12px;cursor:pointer;margin-top:8px;-webkit-tap-highlight-color:transparent;}
+    .btn-primary:active{opacity:.85;}
+    .perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .perf-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px;}
+    .perf-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+    .perf-val{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:800;}
+    .sector-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    .sector-name{font-size:12px;font-weight:600;width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sector-bar-wrap{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;}
+    .sector-bar{height:100%;border-radius:4px;}
+    .sector-pct{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);width:36px;text-align:right;flex-shrink:0;}
+    .spin{animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .empty{text-align:center;padding:40px 16px;color:var(--muted);}
+    .empty .icon{font-size:40px;margin-bottom:12px;}
+    .empty p{font-size:14px;line-height:1.7;}
+    #toast{position:fixed;bottom:calc(var(--nav-h)+14px);left:50%;transform:translateX(-50%) translateY(8px);background:var(--green);color:#000;font-size:12px;font-weight:700;padding:8px 18px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:300;}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    #toast.err{background:var(--red);color:#fff;}
+    .pos{color:var(--green);} .neg{color:var(--red);} .neu{color:var(--text);}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav">
+  <button class="nb active" data-v="holdings">
+    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+    Holdings
+  </button>
+  <button class="nb" data-v="watchlist">
+    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Watchlist
+  </button>
+  <button class="nb" data-v="performance">
+    <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Performance
+  </button>
+</nav>
+<div id="toast"></div>
+<script>
+const KEY='nse-terminal-v1';
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return{holdings:[],watchlist:[],prices:{}};return{holdings:d.holdings||[],watchlist:d.watchlist||[],prices:d.prices||{}};}catch{return{holdings:[],watchlist:[],prices:{}};}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(n,dec=2){if(n==null||isNaN(n))return'--';return'₹'+Number(n).toLocaleString('en-IN',{minimumFractionDigits:dec,maximumFractionDigits:dec});}
+function fmtPct(n){if(n==null||isNaN(n))return'--';return(n>=0?'+':'')+n.toFixed(2)+'%';}
+function pc(n){return n>0?'pos':n<0?'neg':'neu';}
+
+function marketStatus(){
+  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Kolkata'}));
+  const day=now.getDay(),h=now.getHours(),m=now.getMinutes(),mins=h*60+m;
+  if(day===0||day===6)return false;
+  return mins>=555&&mins<=930;
+}
+function getIST(){return new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false});}
+
+async function fetchPrices(symbols){
+  if(!symbols.length)return{};
+  const results={};
+  await Promise.allSettled(symbols.map(async sym=>{
     try{
-      var cs=getComputedStyle(orig);
-      var t='';
-      for(var i=0;i<cs.length;i++){t+=cs[i]+':'+cs.getPropertyValue(cs[i])+';';}
-      clone.style.cssText=t;
-    }catch(e){}
-    var oc=orig.children,cc=clone.children;
-    for(var j=0;j<oc.length&&j<cc.length;j++){inlineAll(oc[j],cc[j]);}
-  }
-  function stripExternal(clone){
-    var imgs=clone.querySelectorAll('img');
-    for(var i=0;i<imgs.length;i++){
-      var s=imgs[i].getAttribute('src');
-      if(s&&!s.startsWith('data:'))imgs[i].removeAttribute('src');
-    }
-    var all=clone.querySelectorAll('*');
-    for(var i=0;i<all.length;i++){
-      var st=all[i].style.cssText;
-      if(st&&st.indexOf('url(')>=0){
-        all[i].style.cssText=st.replace(/url\(["']?(?!data:)[^)"']*["']?\)/gi,'none');
-      }
-    }
-  }
-  window.addEventListener('message',function(e){
-    if(!e.data||e.data.type!=='INLINE_EDIT_CAPTURE_REQUEST')return;
-    var scrollX=window.scrollX||window.pageXOffset||0;
-    var scrollY=window.scrollY||window.pageYOffset||0;
-    var w=window.innerWidth,h=window.innerHeight;
-    try{
-      var clone=document.documentElement.cloneNode(true);
-      var rm=clone.querySelectorAll('script,link[rel="stylesheet"],style');
-      for(var i=0;i<rm.length;i++){rm[i].remove();}
-      inlineAll(document.documentElement,clone);
-      stripExternal(clone);
-      var html=new XMLSerializer().serializeToString(clone);
-      var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+w+'" height="'+h+'">'
-        +'<foreignObject width="100%" height="100%">'
-        +'<div xmlns="http://www.w3.org/1999/xhtml" style="width:'+w+'px;height:'+h+'px;overflow:hidden">'
-        +'<div style="transform:translate(-'+scrollX+'px,-'+scrollY+'px);transform-origin:top left">'
-        +html+'</div></div></foreignObject></svg>';
-      var svgUrl='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
-      var img=new Image();
-      img.onload=function(){
-        var c=document.createElement('canvas');c.width=w;c.height=h;
-        c.getContext('2d').drawImage(img,0,0);
-        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:c.toDataURL('image/png'),scrollX:scrollX,scrollY:scrollY},'*');
-      };
-      img.onerror=function(){
-        window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
-      };
-      img.src=svgUrl;
-    }catch(err){
-      window.parent.postMessage({type:'INLINE_EDIT_SCREENSHOT_RESULT',dataUrl:null,scrollX:scrollX,scrollY:scrollY},'*');
-    }
+      const nseSym=sym.includes('.')?sym:sym+'.NS';
+      const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(nseSym)}?interval=1d&range=1d`;
+      const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const res=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
+      const json=await res.json();
+      const data=JSON.parse(json.contents);
+      const q=data?.chart?.result?.[0];if(!q)return;
+      const meta=q.meta;
+      const price=meta.regularMarketPrice||meta.previousClose;
+      const prev=meta.previousClose||price;
+      const change=price-prev,changePct=prev?(change/prev)*100:0;
+      results[sym]={price,change,changePct,high52:meta.fiftyTwoWeekHigh,low52:meta.fiftyTwoWeekLow,prev};
+    }catch{}
+  }));
+  return results;
+}
+
+function calcHoldings(holdings,prices){
+  return holdings.map(h=>{
+    const p=prices[h.symbol]||{};
+    const ltp=p.price||h.lastPrice||null;
+    const avgCost=h.shares>0?h.costBasis/h.shares:0;
+    const currentValue=ltp?ltp*h.shares:null;
+    const pnl=currentValue!=null?currentValue-h.costBasis:null;
+    const pnlPct=(pnl!=null&&h.costBasis>0)?(pnl/h.costBasis)*100:null;
+    const dayPnl=(ltp&&p.change)?p.change*h.shares:null;
+    return{...h,ltp,avgCost,currentValue,pnl,pnlPct,dayPnl,changePct:p.changePct||null};
   });
-})();
-</script></body>
+}
+
+let view='holdings',refreshing=false,clockTimer;
+
+function go(v){view=v;document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('active',b.dataset.v===v));render();window.scrollTo(0,0);}
+
+const REFRESH_IC=(spin)=>`<svg class="${spin?'spin':''}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>`;
+const PLUS_IC=`<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+const DEL_IC=`<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`;
+const X_IC=`<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const SECTORS=['Technology','Finance','Energy','Healthcare','Consumer','Auto','Realty','Metals','Pharma','FMCG','Infra','Other'];
+const SECTOR_COLORS=['#06D6A0','#FFD166','#a855f7','#3b82f6','#FF6B6B','#06b6d4','#f97316','#ec4899','#22c55e','#ef4444','#8b5cf6','#64748b'];
+
+function render(){
+  const d=load();
+  const app=document.getElementById('app');
+  const open=marketStatus();
+  const topbar=`<div class="topbar"><div><div class="topbar-title">NSE TERMINAL</div><div class="clock" id="clock">${getIST()} IST</div></div><span class="market-badge ${open?'open':'closed'}">${open?'● OPEN':'● CLOSED'}</span></div>`;
+  if(view==='holdings')app.innerHTML=topbar+renderHoldings(d);
+  if(view==='watchlist')app.innerHTML=topbar+renderWatchlist(d);
+  if(view==='performance')app.innerHTML=topbar+renderPerformance(d);
+  clearInterval(clockTimer);
+  clockTimer=setInterval(()=>{const el=document.getElementById('clock');if(el)el.textContent=getIST()+' IST';},1000);
+  bind(d);
+}
+
+function renderHoldings(d){
+  const holdings=calcHoldings(d.holdings,d.prices);
+  const totalCost=holdings.reduce((s,h)=>s+h.costBasis,0);
+  const totalVal=holdings.reduce((s,h)=>s+(h.currentValue||h.costBasis),0);
+  const totalPnl=totalVal-totalCost,totalPct=totalCost>0?(totalPnl/totalCost)*100:0;
+  const dayPnl=holdings.reduce((s,h)=>s+(h.dayPnl||0),0);
+  const summary=`<div class="summary">
+    <div class="sum-card"><div class="sum-lbl">Portfolio Value</div><div class="sum-val">${fmt(totalVal,0)}</div><div class="sum-sub ${pc(totalPnl)}">${fmt(Math.abs(totalPnl),0)} (${fmtPct(totalPct)})</div></div>
+    <div class="sum-card"><div class="sum-lbl">Day P&amp;L</div><div class="sum-val ${pc(dayPnl)}">${dayPnl?fmt(dayPnl,0):'--'}</div><div class="sum-sub">Invested: ${fmt(totalCost,0)}</div></div>
+  </div>`;
+  const addForm=`<div class="section" style="margin-bottom:12px"><div class="add-panel" id="add-panel" style="display:none">
+    <div class="add-panel-title">Add Stock</div>
+    <div class="form-row"><div class="fg"><label>NSE Symbol</label><input id="h-sym" placeholder="INFY" style="text-transform:uppercase"></div><div class="fg"><label>Company Name</label><input id="h-name" placeholder="Infosys"></div></div>
+    <div class="form-row"><div class="fg"><label>Shares</label><input id="h-shares" type="number" placeholder="100"></div><div class="fg"><label>Avg Cost (₹)</label><input id="h-cost" type="number" placeholder="1500"></div></div>
+    <div class="form-row"><div class="fg"><label>Sector</label><select id="h-sector">${SECTORS.map(s=>`<option>${s}</option>`).join('')}</select></div><div class="fg"><label>Goal (₹)</label><input id="h-goal" type="number" placeholder="Optional"></div></div>
+    <button class="btn-primary" id="h-submit">Add to Portfolio</button>
+  </div></div>`;
+  const cards=holdings.length?holdings.map(h=>{
+    const alloc=totalVal>0&&h.currentValue?((h.currentValue/totalVal)*100).toFixed(1):'0.0';
+    return`<div class="holding-card">
+      <div class="hc-top"><div><div class="hc-sym">${esc(h.symbol)}</div><div class="hc-name">${esc(h.name||'')}</div>${h.sector?`<div class="hc-sector">${esc(h.sector)}</div>`:''}</div>
+      <div><div class="hc-ltp">${h.ltp?fmt(h.ltp):'--'}</div><div class="hc-chg ${pc(h.changePct)}">${h.changePct!=null?fmtPct(h.changePct):'--'}</div></div></div>
+      <div class="hc-grid">
+        <div class="hc-field"><div class="hc-field-lbl">Avg Cost</div><div class="hc-field-val">${fmt(h.avgCost)}</div></div>
+        <div class="hc-field"><div class="hc-field-lbl">Qty</div><div class="hc-field-val">${h.shares}</div></div>
+        <div class="hc-field"><div class="hc-field-lbl">Value</div><div class="hc-field-val">${h.currentValue?fmt(h.currentValue,0):'--'}</div></div>
+        <div class="hc-field"><div class="hc-field-lbl">P&amp;L</div><div class="hc-field-val ${pc(h.pnl)}">${h.pnl!=null?(h.pnl>=0?'+':'')+fmt(Math.abs(h.pnl),0):'--'}</div></div>
+        <div class="hc-field"><div class="hc-field-lbl">Return</div><div class="hc-field-val ${pc(h.pnlPct)}">${h.pnlPct!=null?fmtPct(h.pnlPct):'--'}</div></div>
+        <div class="hc-field"><div class="hc-field-lbl">Alloc%</div><div class="hc-field-val">${alloc}%</div></div>
+        ${h.goal?`<div class="hc-field" style="grid-column:span 3"><div class="hc-field-lbl">Goal</div><div class="hc-field-val">${fmt(h.goal,0)}</div></div>`:''}
+      </div>
+      <div class="hc-actions"><button class="del-btn" data-del="${h.id}">${DEL_IC} Remove</button></div>
+    </div>`;
+  }).join(''):`<div class="empty"><div class="icon">📊</div><p>No holdings yet.<br>Tap + to add your first stock.</p></div>`;
+  return`${summary}<div class="section" style="margin-bottom:8px"><div class="section-hdr"><span class="section-title">Holdings (${holdings.length})</span><div style="display:flex;gap:6px"><button class="icon-btn" id="refresh-btn">${REFRESH_IC(refreshing)}</button><button class="icon-btn" id="toggle-add">${PLUS_IC}</button></div></div></div>${addForm}<div class="section">${cards}</div>`;
+}
+
+function renderWatchlist(d){
+  const addForm=`<div class="section" style="margin-bottom:12px"><div class="add-panel" id="wl-panel" style="display:none">
+    <div class="add-panel-title">Add to Watchlist</div>
+    <div class="form-row"><div class="fg"><label>NSE Symbol</label><input id="wl-sym" placeholder="TCS" style="text-transform:uppercase"></div><div class="fg"><label>Name</label><input id="wl-name" placeholder="TCS Ltd"></div></div>
+    <button class="btn-primary" id="wl-submit">Add to Watchlist</button>
+  </div></div>`;
+  const cards=d.watchlist.length?d.watchlist.map(w=>{
+    const p=d.prices[w.symbol]||{};
+    return`<div class="wl-card"><div style="flex:1;min-width:0"><div class="wl-sym">${esc(w.symbol)}</div><div class="wl-name">${esc(w.name||w.symbol)}</div></div>
+    <div><div class="wl-ltp">${p.price?fmt(p.price):'--'}</div><div class="wl-chg ${pc(p.changePct)}">${p.changePct!=null?fmtPct(p.changePct):'--'}</div></div>
+    <button class="wl-del" data-wl-del="${w.id}">${X_IC}</button></div>`;
+  }).join(''):`<div class="empty"><div class="icon">👁️</div><p>No stocks in watchlist.</p></div>`;
+  return`<div class="section" style="margin-bottom:8px;margin-top:12px"><div class="section-hdr"><span class="section-title">Watchlist (${d.watchlist.length})</span><div style="display:flex;gap:6px"><button class="icon-btn" id="refresh-wl">${REFRESH_IC(refreshing)}</button><button class="icon-btn" id="toggle-wl">${PLUS_IC}</button></div></div></div>${addForm}<div class="section">${cards}</div>`;
+}
+
+function renderPerformance(d){
+  const holdings=calcHoldings(d.holdings,d.prices);
+  const totalCost=holdings.reduce((s,h)=>s+h.costBasis,0);
+  const totalVal=holdings.reduce((s,h)=>s+(h.currentValue||h.costBasis),0);
+  const totalPnl=totalVal-totalCost,totalPct=totalCost>0?(totalPnl/totalCost)*100:0;
+  const dayPnl=holdings.reduce((s,h)=>s+(h.dayPnl||0),0);
+  const sectors={};
+  holdings.forEach(h=>{const s=h.sector||'Other';if(!sectors[s])sectors[s]=0;sectors[s]+=(h.currentValue||h.costBasis);});
+  const sectorList=Object.entries(sectors).sort((a,b)=>b[1]-a[1]);
+  const sectorBars=sectorList.map(([name,val],i)=>{const pct=totalVal>0?(val/totalVal*100):0;return`<div class="sector-row"><div class="sector-name">${esc(name)}</div><div class="sector-bar-wrap"><div class="sector-bar" style="width:${pct.toFixed(1)}%;background:${SECTOR_COLORS[i%SECTOR_COLORS.length]}"></div></div><div class="sector-pct">${pct.toFixed(1)}%</div></div>`;}).join('');
+  const topHoldings=[...holdings].sort((a,b)=>(b.currentValue||0)-(a.currentValue||0)).slice(0,5);
+  const topRows=topHoldings.map(h=>{const alloc=totalVal>0&&h.currentValue?((h.currentValue/totalVal)*100).toFixed(1):'0.0';return`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)"><div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">${esc(h.symbol)}</div><div style="font-size:11px;color:var(--muted)">${alloc}% alloc</div></div><div style="text-align:right"><div class="${pc(h.pnl)}" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">${h.pnl!=null?(h.pnl>=0?'+':'')+fmt(Math.abs(h.pnl),0):'--'}</div><div class="${pc(h.pnlPct)}" style="font-size:11px">${h.pnlPct!=null?fmtPct(h.pnlPct):'--'}</div></div></div>`;}).join('');
+  return`<div style="padding:12px 16px 0"><div class="perf-grid">
+    <div class="perf-card"><div class="perf-lbl">Total Invested</div><div class="perf-val">${fmt(totalCost,0)}</div></div>
+    <div class="perf-card"><div class="perf-lbl">Current Value</div><div class="perf-val">${fmt(totalVal,0)}</div></div>
+    <div class="perf-card"><div class="perf-lbl">Total P&amp;L</div><div class="perf-val ${pc(totalPnl)}">${totalPnl>=0?'+':''}${fmt(Math.abs(totalPnl),0)}</div></div>
+    <div class="perf-card"><div class="perf-lbl">Return</div><div class="perf-val ${pc(totalPct)}">${fmtPct(totalPct)}</div></div>
+    <div class="perf-card" style="grid-column:span 2"><div class="perf-lbl">Day P&amp;L</div><div class="perf-val ${pc(dayPnl)}">${dayPnl?(dayPnl>=0?'+':'')+fmt(Math.abs(dayPnl),0):'--'}</div></div>
+  </div></div>
+  ${sectorList.length?`<div class="section" style="margin-top:16px"><div class="section-hdr"><span class="section-title">Sector Allocation</span></div>${sectorBars}</div>`:''}
+  ${topHoldings.length?`<div class="section" style="margin-top:16px"><div class="section-hdr"><span class="section-title">Top Holdings</span></div><div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:0 14px">${topRows}</div></div>`:''}`;
+}
+
+async function doRefresh(symbols){
+  if(refreshing||!symbols.length)return;
+  refreshing=true;render();
+  toast('Fetching prices…',false);
+  const prices=await fetchPrices(symbols);
+  const data=load();
+  Object.assign(data.prices,prices);
+  data.holdings.forEach(h=>{if(prices[h.symbol])h.lastPrice=prices[h.symbol].price;});
+  save(data);refreshing=false;render();
+  toast(Object.keys(prices).length?'Prices updated ✓':'Could not fetch prices',!Object.keys(prices).length);
+}
+
+function bind(d){
+  document.querySelectorAll('.nb').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  if(view==='holdings'){
+    document.getElementById('toggle-add')?.addEventListener('click',()=>{const p=document.getElementById('add-panel');if(p)p.style.display=p.style.display==='none'?'block':'none';});
+    document.getElementById('refresh-btn')?.addEventListener('click',()=>{const data=load();const syms=[...new Set([...data.holdings.map(h=>h.symbol),...data.watchlist.map(w=>w.symbol)])];doRefresh(syms);});
+    document.getElementById('h-submit')?.addEventListener('click',()=>{
+      const sym=document.getElementById('h-sym').value.trim().toUpperCase();
+      const name=document.getElementById('h-name').value.trim();
+      const shares=parseFloat(document.getElementById('h-shares').value);
+      const cost=parseFloat(document.getElementById('h-cost').value);
+      const sector=document.getElementById('h-sector').value;
+      const goal=parseFloat(document.getElementById('h-goal').value)||null;
+      if(!sym||!shares||!cost||isNaN(shares)||isNaN(cost)){toast('Fill required fields',true);return;}
+      const data=load();
+      data.holdings.push({id:uid(),symbol:sym,name:name||sym,shares,costBasis:shares*cost,sector,goal});
+      save(data);document.getElementById('add-panel').style.display='none';render();toast('Stock added ✓');doRefresh([sym]);
+    });
+    document.querySelectorAll('[data-del]').forEach(btn=>btn.onclick=()=>{if(!confirm('Remove this holding?'))return;const data=load();data.holdings=data.holdings.filter(h=>h.id!==btn.dataset.del);save(data);render();toast('Removed');});
+  }
+  if(view==='watchlist'){
+    document.getElementById('toggle-wl')?.addEventListener('click',()=>{const p=document.getElementById('wl-panel');if(p)p.style.display=p.style.display==='none'?'block':'none';});
+    document.getElementById('refresh-wl')?.addEventListener('click',()=>{const data=load();const syms=[...new Set([...data.holdings.map(h=>h.symbol),...data.watchlist.map(w=>w.symbol)])];doRefresh(syms);});
+    document.getElementById('wl-submit')?.addEventListener('click',()=>{
+      const sym=document.getElementById('wl-sym').value.trim().toUpperCase();
+      const name=document.getElementById('wl-name').value.trim();
+      if(!sym){toast('Enter a symbol',true);return;}
+      const data=load();
+      if(data.watchlist.find(w=>w.symbol===sym)){toast('Already in watchlist',true);return;}
+      data.watchlist.push({id:uid(),symbol:sym,name:name||sym});
+      save(data);render();toast('Added ✓');doRefresh([sym]);
+    });
+    document.querySelectorAll('[data-wl-del]').forEach(btn=>btn.onclick=()=>{const data=load();data.watchlist=data.watchlist.filter(w=>w.id!==btn.dataset.wlDel);save(data);render();toast('Removed');});
+  }
+}
+
+let toastT;
+function toast(msg,isErr=false){const el=document.getElementById('toast');el.textContent=msg;el.classList.toggle('err',isErr);el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);}
+
+go('holdings');
+</script>
+</body>
 </html>
