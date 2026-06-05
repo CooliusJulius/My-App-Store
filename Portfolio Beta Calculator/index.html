@@ -1,31 +1,435 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!--
-       ______                            __
-      / ____/___  ____ ___  ____  __  __/ /____  _____
-     / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-    / /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-    \____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                        /_/
-            Created with Perplexity Computer
-            https://www.perplexity.ai/computer
-    -->
-    <meta name="generator" content="Perplexity Computer">
-    <meta name="author" content="Perplexity Computer">
-    <meta property="og:see_also" content="https://www.perplexity.ai/computer">
-    <link rel="author" href="https://www.perplexity.ai/computer">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>Portfolio Beta Calculator</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="./assets/index-QPbnLIja.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C-4n69yD.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+  <meta name="theme-color" content="#0d0d14"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>Portfolio Beta Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{--bg:#0d0d14;--bg2:#13131e;--bg3:#1b1b28;--border:#252535;--text:#ebebf5;--muted:#55556a;--accent:#818cf8;--green:#34d399;--red:#f87171;--yellow:#fbbf24;--nav-h:0px;}
+    html,body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overscroll-behavior:none;height:100%;}
+    #app{max-width:480px;margin:0 auto;padding:0 0 32px;}
+
+    /* ── Top bar ── */
+    .topbar{padding:20px 16px 0;display:flex;align-items:flex-start;justify-content:space-between;}
+    .app-title{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;}
+    .back-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:5px 12px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+
+    /* ── Accounts view ── */
+    .section{padding:0 16px;}
+    .section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-top:20px;}
+    .section-title{font-size:22px;font-weight:800;letter-spacing:-.4px;}
+    .section-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+    .icon-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+    .icon-btn svg{width:16px;height:16px;}
+
+    .account-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s;}
+    .account-card:active{border-color:var(--accent);}
+    .account-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .account-name{font-size:17px;font-weight:700;}
+    .account-beta-badge{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding:4px 10px;border-radius:8px;}
+    .badge-low{background:rgba(248,113,113,.15);color:var(--red);}
+    .badge-market{background:rgba(129,140,248,.15);color:var(--accent);}
+    .badge-moderate{background:rgba(251,191,36,.15);color:var(--yellow);}
+    .badge-high{background:rgba(52,211,153,.15);color:var(--green);}
+    .account-meta{display:flex;gap:16px;}
+    .account-meta-item{font-size:12px;color:var(--muted);}
+    .account-meta-item b{color:var(--text);font-weight:600;}
+    .account-del{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+    .account-del svg{width:13px;height:13px;}
+
+    /* ── Portfolio view ── */
+    .portfolio-hdr{padding:16px 16px 0;}
+    .portfolio-title{font-size:20px;font-weight:800;}
+    .portfolio-beta-card{margin:16px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px;}
+    .pb-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+    .pb-value{font-family:'JetBrains Mono',monospace;font-size:48px;font-weight:700;line-height:1;}
+    .pb-category{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;}
+    .pb-meta{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border);}
+    .pb-meta-item{text-align:center;}
+    .pb-meta-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+    .pb-meta-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;margin-top:4px;}
+
+    /* ── Holdings table ── */
+    .holdings-section{padding:0 16px;}
+    .holdings-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+    .holdings-title{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+    .holding-row{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:8px;}
+    .hr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+    .hr-sym{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;}
+    .hr-company{font-size:11px;color:var(--muted);margin-top:1px;}
+    .hr-rbeta{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;text-align:right;}
+    .hr-rbeta-lbl{font-size:10px;color:var(--muted);text-align:right;margin-top:1px;}
+    .hr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+    .hr-field{background:var(--bg3);border-radius:8px;padding:8px;text-align:center;}
+    .hr-field-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+    .hr-field-val{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;margin-top:3px;}
+    .hr-actions{display:flex;gap:6px;margin-top:10px;}
+    .hr-edit-btn{flex:1;background:var(--bg3);color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:8px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .hr-del-btn{width:36px;height:36px;background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0;}
+    .hr-del-btn svg{width:13px;height:13px;}
+
+    /* ── Beta fetch status ── */
+    .beta-status{font-size:10px;margin-top:3px;}
+    .beta-status.auto{color:var(--green);}
+    .beta-status.manual{color:var(--yellow);}
+    .beta-status.error{color:var(--red);}
+
+    /* ── Add/Edit form panel ── */
+    .form-panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 12px;}
+    .form-panel-title{font-size:14px;font-weight:700;margin-bottom:16px;}
+    .fg{margin-bottom:12px;}
+    .fg label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+    .fg input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:11px 14px;font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;-webkit-appearance:none;}
+    .fg input:focus{border-color:var(--accent);}
+    .fg input::placeholder{color:var(--muted);}
+    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .beta-row{display:flex;gap:8px;align-items:flex-end;}
+    .beta-row .fg{flex:1;margin-bottom:0;}
+    .fetch-btn{height:42px;padding:0 14px;background:var(--accent);color:#000;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;flex-shrink:0;}
+    .fetch-btn:disabled{opacity:.5;cursor:not-allowed;}
+    .btn-primary{width:100%;background:var(--accent);color:#000;font-size:14px;font-weight:700;font-family:inherit;border:none;border-radius:10px;padding:13px;cursor:pointer;margin-top:4px;-webkit-tap-highlight-color:transparent;}
+    .btn-primary:active{opacity:.85;}
+    .btn-secondary{width:100%;background:transparent;color:var(--muted);font-size:14px;font-weight:600;font-family:inherit;border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;margin-top:8px;-webkit-tap-highlight-color:transparent;}
+
+    /* ── Account create ── */
+    .create-panel{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px;margin:0 16px 12px;}
+
+    /* ── Empty ── */
+    .empty{text-align:center;padding:50px 16px;color:var(--muted);}
+    .empty .icon{font-size:44px;margin-bottom:14px;}
+    .empty p{font-size:14px;line-height:1.7;}
+
+    /* ── Toast ── */
+    #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--accent);color:#000;font-size:12px;font-weight:700;padding:8px 18px;border-radius:20px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:300;}
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    #toast.err{background:var(--red);color:#fff;}
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+const KEY='beta-calc-v1';
+function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'null');if(!d)return{accounts:[]};return{accounts:d.accounts||[]};}catch{return{accounts:[]};}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function round(n,d=3){return Math.round(n*Math.pow(10,d))/Math.pow(10,d);}
+
+// Fetch beta from Yahoo Finance via allorigins proxy
+async function fetchBeta(symbol){
+  try{
+    const url=`https://query1.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(symbol)}?modules=defaultKeyStatistics`;
+    const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+    const res=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
+    const json=await res.json();
+    const data=JSON.parse(json.contents);
+    const beta=data?.quoteSummary?.result?.[0]?.defaultKeyStatistics?.beta?.raw;
+    if(beta==null)throw new Error('No beta');
+    return{beta:round(beta,3),source:'yahoo'};
+  }catch{
+    // Fallback: try chart endpoint
+    try{
+      const url=`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
+      const proxy=`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+      const res=await fetch(proxy,{signal:AbortSignal.timeout(8000)});
+      const json=await res.json();
+      const data=JSON.parse(json.contents);
+      const beta=data?.chart?.result?.[0]?.meta?.beta;
+      if(beta==null)throw new Error('No beta');
+      return{beta:round(beta,3),source:'yahoo'};
+    }catch{
+      return{beta:null,source:'error'};
+    }
+  }
+}
+
+// Beta category
+function betaCat(b){
+  if(b<0.8)return{label:'Low Volatility',cls:'badge-low'};
+  if(b<1.0)return{label:'Market-like',cls:'badge-market'};
+  if(b<1.2)return{label:'Moderate',cls:'badge-moderate'};
+  return{label:'High Volatility',cls:'badge-high'};
+}
+
+// Calculate portfolio beta for an account
+function portfolioBeta(account){
+  const total=account.holdings.reduce((s,h)=>s+h.pct,0);
+  if(!total)return{beta:0,allocated:0};
+  const beta=account.holdings.reduce((s,h)=>{
+    const b=h.beta!=null?h.beta:1;
+    return s+(b*(h.pct/100));
+  },0);
+  return{beta:round(beta,3),allocated:round(total,1)};
+}
+
+// ── State ─────────────────────────────────────────────────────
+let view='accounts'; // 'accounts' | 'portfolio' | 'add-account' | 'add-stock' | 'edit-stock'
+let activeAccountId=null;
+let editStockId=null;
+let fetchingBeta=false;
+
+// ── Router ────────────────────────────────────────────────────
+function go(v,opts){
+  view=v;
+  if(opts&&opts.accountId)activeAccountId=opts.accountId;
+  if(opts&&opts.stockId!==undefined)editStockId=opts.stockId;
+  render();window.scrollTo(0,0);
+}
+
+function render(){
+  const app=document.getElementById('app');
+  const d=load();
+  if(view==='accounts')     app.innerHTML=renderAccounts(d);
+  if(view==='add-account')  app.innerHTML=renderAddAccount();
+  if(view==='portfolio')    app.innerHTML=renderPortfolio(d);
+  if(view==='add-stock')    app.innerHTML=renderAddStock(d);
+  if(view==='edit-stock')   app.innerHTML=renderEditStock(d);
+  bind(d);
+}
+
+// ── Views ─────────────────────────────────────────────────────
+const PLUS_IC=`<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`;
+const DEL_IC=`<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`;
+const BACK_IC=`<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
+const EDIT_IC=`<svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+
+function renderAccounts(d){
+  const topbar=`<div class="topbar"><div class="app-title">Portfolio β Calculator</div><button class="icon-btn" id="add-account-btn">${PLUS_IC}</button></div>`;
+  if(!d.accounts.length)return topbar+`<div class="section"><div class="section-hdr"><div><div class="section-title">Accounts</div><div class="section-sub">Create an account to start tracking beta</div></div></div></div><div class="empty"><div class="icon">📐</div><p>No accounts yet.<br>Tap <strong>+</strong> to create your first account.</p></div>`;
+  const cards=d.accounts.map(acc=>{
+    const{beta,allocated}=portfolioBeta(acc);
+    const cat=betaCat(beta);
+    return`<div class="account-card" data-acc="${acc.id}">
+      <div class="account-card-top">
+        <div><div class="account-name">${esc(acc.name)}</div><div class="account-meta" style="margin-top:6px"><div class="account-meta-item"><b>${acc.holdings.length}</b> stocks</div><div class="account-meta-item"><b>${allocated}%</b> allocated</div></div></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div><div class="account-beta-badge ${cat.cls}">β ${beta.toFixed(3)}</div><div style="font-size:10px;color:var(--muted);margin-top:4px;text-align:right">${cat.label}</div></div>
+          <button class="account-del" data-del-acc="${acc.id}">${DEL_IC}</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  return`${topbar}<div class="section"><div class="section-hdr"><div><div class="section-title">Accounts</div><div class="section-sub">${d.accounts.length} account${d.accounts.length!==1?'s':''}</div></div></div></div><div class="section">${cards}</div>`;
+}
+
+function renderAddAccount(){
+  return`<div class="topbar"><div class="app-title">Portfolio β Calculator</div><button class="back-btn" id="back-btn">${BACK_IC} Back</button></div>
+  <div class="section"><div class="section-hdr"><div class="section-title">New Account</div></div></div>
+  <div class="create-panel">
+    <div class="fg"><label>Account Name</label><input id="acc-name" placeholder="e.g. Long Term, Trading" autocomplete="off" maxlength="40"></div>
+    <button class="btn-primary" id="acc-submit">Create Account</button>
+    <button class="btn-secondary" id="acc-cancel">Cancel</button>
+  </div>`;
+}
+
+function renderPortfolio(d){
+  const acc=d.accounts.find(a=>a.id===activeAccountId);
+  if(!acc)return renderAccounts(d);
+  const{beta,allocated}=portfolioBeta(acc);
+  const cat=betaCat(beta);
+  const topbar=`<div class="topbar"><button class="back-btn" id="back-btn">${BACK_IC} Accounts</button></div>`;
+  const betaCard=`<div class="portfolio-hdr"><div class="portfolio-title">${esc(acc.name)}</div></div>
+  <div class="portfolio-beta-card">
+    <div class="pb-label">Portfolio Beta (Combined β)</div>
+    <div class="pb-value">${beta.toFixed(3)}</div>
+    <div class="pb-category ${cat.cls}">${cat.label}</div>
+    <div class="pb-meta">
+      <div class="pb-meta-item"><div class="pb-meta-lbl">Holdings</div><div class="pb-meta-val">${acc.holdings.length}</div></div>
+      <div class="pb-meta-item"><div class="pb-meta-lbl">Allocated</div><div class="pb-meta-val">${allocated}%</div></div>
+    </div>
+  </div>`;
+  const holdingRows=acc.holdings.length?acc.holdings.map(h=>{
+    const relBeta=h.beta!=null?round(h.beta*(h.pct/100),4):null;
+    const src=h.betaSource==='yahoo'?'Auto-fetched':h.betaSource==='manual'?'Manual':'Unknown';
+    const srcCls=h.betaSource==='yahoo'?'auto':h.betaSource==='manual'?'manual':'error';
+    return`<div class="holding-row">
+      <div class="hr-top">
+        <div><div class="hr-sym">${esc(h.symbol)}</div><div class="hr-company">${esc(h.name||'')}</div><div class="beta-status ${srcCls}">${src}</div></div>
+        <div><div class="hr-rbeta">${relBeta!=null?relBeta.toFixed(4):'--'}</div><div class="hr-rbeta-lbl">Relative β</div></div>
+      </div>
+      <div class="hr-grid">
+        <div class="hr-field"><div class="hr-field-lbl">% Holding</div><div class="hr-field-val">${h.pct}%</div></div>
+        <div class="hr-field"><div class="hr-field-lbl">Beta (β)</div><div class="hr-field-val">${h.beta!=null?h.beta.toFixed(3):'--'}</div></div>
+        <div class="hr-field"><div class="hr-field-lbl">Rel β</div><div class="hr-field-val">${relBeta!=null?relBeta.toFixed(4):'--'}</div></div>
+      </div>
+      <div class="hr-actions">
+        <button class="hr-edit-btn" data-edit-stock="${h.id}">${EDIT_IC} Edit</button>
+        <button class="hr-del-btn" data-del-stock="${h.id}">${DEL_IC}</button>
+      </div>
+    </div>`;
+  }).join(''):`<div class="empty"><div class="icon">📉</div><p>No stocks added yet.<br>Tap + to add your first stock.</p></div>`;
+  const holdingsSection=`<div class="holdings-section"><div class="holdings-hdr"><span class="holdings-title">Holdings (${acc.holdings.length})</span><button class="icon-btn" id="add-stock-btn">${PLUS_IC}</button></div>${holdingRows}</div>`;
+  const betaRef=`<div style="padding:16px 16px 0;font-size:11px;color:var(--muted);line-height:1.8">
+    <div style="font-weight:700;margin-bottom:4px">β Reference</div>
+    β &lt; 0.8 → Low Volatility &nbsp;|&nbsp; 0.8–1.0 → Market-like<br>
+    1.0–1.2 → Moderate &nbsp;|&nbsp; &gt;1.2 → High Volatility<br>
+    <div style="margin-top:4px">Relative β = Stock β × (% Holding ÷ 100)</div>
+    <div style="margin-top:2px;color:#3a3a50">Beta data from Yahoo Finance</div>
+  </div>`;
+  return`${topbar}${betaCard}${holdingsSection}${betaRef}`;
+}
+
+function renderAddStock(d){
+  const acc=d.accounts.find(a=>a.id===activeAccountId);
+  return`<div class="topbar"><div class="app-title">${esc(acc?acc.name:'')}</div><button class="back-btn" id="back-btn">${BACK_IC} Back</button></div>
+  <div class="section"><div class="section-hdr"><div class="section-title">Add Stock</div></div></div>
+  <div class="form-panel">
+    <div class="fg-row">
+      <div class="fg"><label>Ticker Symbol</label><input id="s-sym" placeholder="e.g. AAPL" style="text-transform:uppercase" autocomplete="off"></div>
+      <div class="fg"><label>% Holding</label><input id="s-pct" type="number" placeholder="e.g. 20" min="0" max="100"></div>
+    </div>
+    <div class="fg"><label>Company Name (optional)</label><input id="s-name" placeholder="e.g. Apple Inc" autocomplete="off"></div>
+    <div class="fg">
+      <label>Beta (β) <span id="beta-status-txt" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— enter ticker and tap Fetch</span></label>
+      <div class="beta-row">
+        <div class="fg"><input id="s-beta" type="number" placeholder="Auto-fetch or enter manually" step="0.001"></div>
+        <button class="fetch-btn" id="fetch-beta-btn">Fetch β</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="s-submit">Add Stock</button>
+    <button class="btn-secondary" id="s-cancel">Cancel</button>
+  </div>
+  <div style="padding:0 16px;font-size:11px;color:var(--muted);line-height:1.7">Enter a ticker and allocation. Beta auto-fetches from Yahoo Finance, or enter it manually.</div>`;
+}
+
+function renderEditStock(d){
+  const acc=d.accounts.find(a=>a.id===activeAccountId);
+  const h=acc?acc.holdings.find(x=>x.id===editStockId):null;
+  if(!h)return renderPortfolio(d);
+  return`<div class="topbar"><div class="app-title">${esc(acc.name)}</div><button class="back-btn" id="back-btn">${BACK_IC} Back</button></div>
+  <div class="section"><div class="section-hdr"><div class="section-title">Edit Holding</div></div></div>
+  <div class="form-panel">
+    <div class="fg-row">
+      <div class="fg"><label>Ticker Symbol</label><input id="s-sym" value="${esc(h.symbol)}" style="text-transform:uppercase" autocomplete="off"></div>
+      <div class="fg"><label>% Holding</label><input id="s-pct" type="number" value="${h.pct}" min="0" max="100"></div>
+    </div>
+    <div class="fg"><label>Company Name</label><input id="s-name" value="${esc(h.name||'')}" autocomplete="off"></div>
+    <div class="fg">
+      <label>Beta (β) <span id="beta-status-txt" style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted)">— ${h.betaSource==='yahoo'?'Auto-fetched from Yahoo':h.betaSource==='manual'?'Manually entered':'Unknown'}</span></label>
+      <div class="beta-row">
+        <div class="fg"><input id="s-beta" type="number" value="${h.beta!=null?h.beta:''}" step="0.001"></div>
+        <button class="fetch-btn" id="fetch-beta-btn">Refresh β</button>
+      </div>
+    </div>
+    <button class="btn-primary" id="s-update">Save Changes</button>
+    <button class="btn-secondary" id="s-cancel">Cancel</button>
+  </div>`;
+}
+
+// ── Bind ──────────────────────────────────────────────────────
+function bind(d){
+  const back=document.getElementById('back-btn');
+  if(back)back.onclick=()=>{
+    if(view==='add-account'||view==='accounts')go('accounts');
+    else if(view==='portfolio')go('accounts');
+    else go('portfolio');
+  };
+
+  if(view==='accounts'){
+    document.getElementById('add-account-btn')?.addEventListener('click',()=>go('add-account'));
+    document.querySelectorAll('[data-acc]').forEach(el=>el.addEventListener('click',e=>{
+      if(e.target.closest('[data-del-acc]'))return;
+      go('portfolio',{accountId:el.dataset.acc});
+    }));
+    document.querySelectorAll('[data-del-acc]').forEach(btn=>btn.addEventListener('click',e=>{
+      e.stopPropagation();
+      if(!confirm('Delete this account and all its holdings?'))return;
+      const data=load();data.accounts=data.accounts.filter(a=>a.id!==btn.dataset.delAcc);
+      save(data);render();toast('Account deleted');
+    }));
+  }
+
+  if(view==='add-account'){
+    document.getElementById('acc-submit')?.addEventListener('click',()=>{
+      const name=document.getElementById('acc-name').value.trim();
+      if(!name){toast('Enter an account name',true);return;}
+      const data=load();
+      data.accounts.push({id:uid(),name,holdings:[]});
+      save(data);go('accounts');toast('Account created ✓');
+    });
+    document.getElementById('acc-cancel')?.addEventListener('click',()=>go('accounts'));
+    document.getElementById('acc-name')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('acc-submit').click();});
+  }
+
+  if(view==='portfolio'){
+    document.getElementById('add-stock-btn')?.addEventListener('click',()=>go('add-stock'));
+    document.querySelectorAll('[data-edit-stock]').forEach(btn=>btn.addEventListener('click',()=>go('edit-stock',{stockId:btn.dataset.editStock})));
+    document.querySelectorAll('[data-del-stock]').forEach(btn=>btn.addEventListener('click',()=>{
+      if(!confirm('Remove this stock?'))return;
+      const data=load();const acc=data.accounts.find(a=>a.id===activeAccountId);
+      if(acc)acc.holdings=acc.holdings.filter(h=>h.id!==btn.dataset.delStock);
+      save(data);render();toast('Stock removed');
+    }));
+  }
+
+  if(view==='add-stock'||view==='edit-stock'){
+    // Fetch beta button
+    document.getElementById('fetch-beta-btn')?.addEventListener('click',async()=>{
+      const sym=document.getElementById('s-sym').value.trim().toUpperCase();
+      if(!sym){toast('Enter a ticker first',true);return;}
+      const btn=document.getElementById('fetch-beta-btn');
+      btn.disabled=true;btn.textContent='Fetching…';
+      const lbl=document.getElementById('beta-status-txt');
+      const{beta,source}=await fetchBeta(sym);
+      btn.disabled=false;btn.textContent=view==='add-stock'?'Fetch β':'Refresh β';
+      if(beta!=null){
+        document.getElementById('s-beta').value=beta;
+        if(lbl)lbl.textContent=`— Auto-fetched from Yahoo`;
+        toast(`β = ${beta} fetched ✓`);
+      }else{
+        if(lbl)lbl.textContent=`— Could not fetch, enter manually`;
+        toast('Could not fetch beta — enter manually',true);
+      }
+    });
+
+    if(view==='add-stock'){
+      document.getElementById('s-submit')?.addEventListener('click',()=>{
+        const sym=document.getElementById('s-sym').value.trim().toUpperCase();
+        const pct=parseFloat(document.getElementById('s-pct').value);
+        const name=document.getElementById('s-name').value.trim();
+        const betaVal=document.getElementById('s-beta').value;
+        const beta=betaVal!==''?parseFloat(betaVal):null;
+        const betaSrc=beta!=null?(document.getElementById('beta-status-txt')?.textContent.includes('Yahoo')?'yahoo':'manual'):'none';
+        if(!sym||isNaN(pct)||pct<=0){toast('Enter ticker and allocation',true);return;}
+        const data=load();const acc=data.accounts.find(a=>a.id===activeAccountId);
+        if(!acc)return;
+        acc.holdings.push({id:uid(),symbol:sym,name:name||sym,pct:round(pct,2),beta,betaSource:betaSrc});
+        save(data);go('portfolio');toast('Stock added ✓');
+      });
+      document.getElementById('s-cancel')?.addEventListener('click',()=>go('portfolio'));
+    }
+
+    if(view==='edit-stock'){
+      document.getElementById('s-update')?.addEventListener('click',()=>{
+        const sym=document.getElementById('s-sym').value.trim().toUpperCase();
+        const pct=parseFloat(document.getElementById('s-pct').value);
+        const name=document.getElementById('s-name').value.trim();
+        const betaVal=document.getElementById('s-beta').value;
+        const beta=betaVal!==''?parseFloat(betaVal):null;
+        const betaSrc=beta!=null?(document.getElementById('beta-status-txt')?.textContent.includes('Yahoo')?'yahoo':'manual'):'none';
+        if(!sym||isNaN(pct)||pct<=0){toast('Enter ticker and allocation',true);return;}
+        const data=load();const acc=data.accounts.find(a=>a.id===activeAccountId);
+        const h=acc?acc.holdings.find(x=>x.id===editStockId):null;
+        if(h){h.symbol=sym;h.name=name||sym;h.pct=round(pct,2);h.beta=beta;h.betaSource=betaSrc;}
+        save(data);go('portfolio');toast('Stock updated ✓');
+      });
+      document.getElementById('s-cancel')?.addEventListener('click',()=>go('portfolio'));
+    }
+  }
+}
+
+let toastT;
+function toast(msg,isErr=false){const el=document.getElementById('toast');el.textContent=msg;el.classList.toggle('err',isErr);el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2500);}
+
+go('accounts');
+</script>
+</body>
 </html>
