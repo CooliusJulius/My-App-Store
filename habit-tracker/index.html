@@ -25,8 +25,9 @@
       --accent:   #2d6a4f;
       --accent-l: #e8f4ef;
       --danger:   #c0392b;
-      --nav-h:    62px;
+      --nav-h:    56px;
       --r:        12px;
+      --safe-b:   env(safe-area-inset-bottom, 0px);
     }
 
     html, body {
@@ -42,9 +43,9 @@
 
     /* ── Layout ── */
     #app {
-      max-width: 430px;
+      max-width: 390px;
       margin: 0 auto;
-      padding: 28px 16px calc(var(--nav-h) + 24px);
+      padding: 20px 14px calc(var(--nav-h) + var(--safe-b) + 16px);
       min-height: 100vh;
     }
 
@@ -52,46 +53,47 @@
     #nav {
       position: fixed;
       bottom: 0; left: 0; right: 0;
-      height: var(--nav-h);
+      height: calc(var(--nav-h) + var(--safe-b));
       background: var(--surface);
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      align-items: flex-start;
+      padding-top: 8px;
+      padding-bottom: var(--safe-b);
       z-index: 100;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
     .nb {
       display: flex; flex-direction: column; align-items: center;
       gap: 3px; background: none; border: none;
       color: var(--muted); cursor: pointer;
-      padding: 8px 16px; border-radius: 8px;
-      font-family: inherit; font-size: 11px; font-weight: 600;
+      padding: 4px 14px; border-radius: 8px;
+      font-family: inherit; font-size: 10px; font-weight: 600;
       letter-spacing: .02em;
       -webkit-tap-highlight-color: transparent;
       transition: color .15s;
     }
-    .nb svg { width: 21px; height: 21px; }
+    .nb svg { width: 20px; height: 20px; }
     .nb.active { color: var(--accent); }
 
     /* ── Page header ── */
-    .ph { margin-bottom: 22px; }
-    .ph h1 { font-size: 26px; font-weight: 800; letter-spacing: -.5px; color: var(--text); }
-    .ph p  { font-size: 13px; color: var(--muted); margin-top: 3px; }
+    .ph { margin-bottom: 18px; }
+    .ph h1 { font-size: 24px; font-weight: 800; letter-spacing: -.5px; }
+    .ph p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
     /* ── Cards ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--r);
-      padding: 16px;
-      margin-bottom: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
     }
 
-    /* ── Empty state ── */
-    .empty { text-align: center; padding: 60px 16px; color: var(--muted); }
-    .empty .icon { font-size: 44px; margin-bottom: 14px; }
-    .empty p { font-size: 15px; line-height: 1.6; }
+    /* ── Empty ── */
+    .empty { text-align: center; padding: 50px 16px; color: var(--muted); }
+    .empty .icon { font-size: 40px; margin-bottom: 12px; }
+    .empty p { font-size: 14px; line-height: 1.6; }
     .empty strong { color: var(--text); }
 
     /* ── Buttons ── */
@@ -100,9 +102,8 @@
       background: var(--accent); color: #fff;
       font-size: 15px; font-weight: 700; font-family: inherit;
       border: none; border-radius: 8px;
-      padding: 14px; cursor: pointer; text-align: center;
-      -webkit-tap-highlight-color: transparent;
-      margin-top: 12px; letter-spacing: .01em;
+      padding: 13px; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent; margin-top: 10px;
     }
     .btn-primary:active { opacity: .85; }
     .btn-secondary {
@@ -110,7 +111,7 @@
       background: transparent; color: var(--muted);
       font-size: 15px; font-weight: 600; font-family: inherit;
       border: 1px solid var(--border2); border-radius: 8px;
-      padding: 13px; cursor: pointer; text-align: center;
+      padding: 12px; cursor: pointer; text-align: center;
       -webkit-tap-highlight-color: transparent; margin-top: 8px;
     }
     .btn-danger {
@@ -118,122 +119,141 @@
       background: transparent; color: var(--danger);
       font-size: 15px; font-weight: 600; font-family: inherit;
       border: 1px solid var(--danger); border-radius: 8px;
-      padding: 13px; cursor: pointer; text-align: center;
-      -webkit-tap-highlight-color: transparent; margin-top: 24px;
+      padding: 12px; cursor: pointer; text-align: center;
+      -webkit-tap-highlight-color: transparent; margin-top: 20px;
     }
 
     /* ── Form ── */
-    .fg { margin-bottom: 16px; }
+    .fg { margin-bottom: 14px; }
     .fg label {
       display: block; font-size: 11px; font-weight: 700;
       color: var(--muted); text-transform: uppercase;
-      letter-spacing: .08em; margin-bottom: 7px;
+      letter-spacing: .08em; margin-bottom: 6px;
     }
     .fg input[type="text"],
     .fg input[type="time"] {
       width: 100%; background: var(--bg);
       border: 1px solid var(--border2); border-radius: 8px;
-      color: var(--text); padding: 12px 14px;
+      color: var(--text); padding: 11px 13px;
       font-size: 15px; font-family: inherit;
       outline: none; -webkit-appearance: none;
     }
     .fg input:focus { border-color: var(--accent); background: var(--surface); }
     .fg input::placeholder { color: var(--muted); }
 
-    /* Color swatches */
     .swatches { display: flex; gap: 10px; flex-wrap: wrap; }
     .sw {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%;
       border: 3px solid transparent; cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .12s;
+      -webkit-tap-highlight-color: transparent; transition: transform .12s;
     }
     .sw.on { border-color: var(--text); transform: scale(1.18); }
 
     /* ── Summary ── */
     .habit-header {
-      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
     }
-    .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-    .habit-name { font-size: 16px; font-weight: 700; flex: 1; color: var(--text); }
-    .habit-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .habit-name { font-size: 15px; font-weight: 700; flex: 1; color: var(--text); }
+    .habit-meta { font-size: 11px; color: var(--muted); margin-top: 1px; }
     .edit-btn {
-      width: 32px; height: 32px; border-radius: 8px;
+      width: 30px; height: 30px; border-radius: 8px;
       border: 1px solid var(--border); background: var(--bg);
       color: var(--muted); cursor: pointer; display: flex;
       align-items: center; justify-content: center;
       -webkit-tap-highlight-color: transparent; flex-shrink: 0;
     }
-    .edit-btn svg { width: 14px; height: 14px; }
+    .edit-btn svg { width: 13px; height: 13px; }
 
     .month-rows { display: flex; flex-direction: column; gap: 2px; }
     .mrow { border-radius: 8px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     .mrow-head {
       display: flex; align-items: center; gap: 8px;
-      padding: 8px 6px; border-radius: 8px; transition: background .1s;
+      padding: 7px 6px; border-radius: 8px; transition: background .1s;
     }
     .mrow:active .mrow-head { background: var(--bg); }
     .mrow.open .mrow-head { background: var(--bg); border-radius: 8px 8px 0 0; }
     .mrow-label {
-      font-size: 12px; font-weight: 600; color: var(--muted);
-      width: 64px; flex-shrink: 0;
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      width: 60px; flex-shrink: 0;
     }
     .mrow.cur .mrow-label { color: var(--text); }
-    .bar-wrap { flex: 1; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .bar-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 3px; overflow: hidden; }
     .bar-fill { height: 100%; border-radius: 3px; min-width: 2px; }
-    .mrow-count { font-size: 11px; font-weight: 600; color: var(--muted); width: 30px; text-align: right; flex-shrink: 0; }
-    .chevron { width: 13px; height: 13px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
+    .mrow-count { font-size: 10px; font-weight: 600; color: var(--muted); width: 28px; text-align: right; flex-shrink: 0; }
+    .chevron { width: 12px; height: 12px; color: var(--muted); flex-shrink: 0; transition: transform .2s; }
     .mrow.open .chevron { transform: rotate(180deg); }
-    .mrow-body { background: var(--bg); border-radius: 0 0 8px 8px; padding: 10px 6px 6px; }
+    .mrow-body { background: var(--bg); border-radius: 0 0 8px 8px; padding: 8px 4px 4px; }
 
     /* ── Calendar ── */
+    /* KEY FIX: DOW header is a SEPARATE row above the grid, not inside it */
+    .cal-wrap { width: 100%; }
+    .cal-dow-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      margin-bottom: 3px;
+    }
+    .cal-dow {
+      font-size: 9px; font-weight: 700; color: var(--muted);
+      text-align: center; line-height: 1;
+      padding: 2px 0;
+    }
     .cal {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 3px;
       width: 100%;
     }
-    .cal-dow {
-      font-size: 10px; font-weight: 600; color: var(--muted);
-      text-align: center; padding-bottom: 4px;
-    }
     .cal-day {
-      /* Use padding-bottom trick for square cells that always fit */
-      position: relative;
-      width: 100%;
-      padding-bottom: 100%;
+      aspect-ratio: 1;
       border-radius: 5px;
       background: var(--bg);
       border: 1px solid var(--border);
-      overflow: hidden;
-    }
-    .cal-day-inner {
-      position: absolute;
-      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 11px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted);
+      overflow: hidden;
+      position: relative;
+      min-width: 0;
+    }
+    .cal-day-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
       font-weight: 500;
       color: var(--muted);
     }
-    .cal-day.empty { background: transparent; border-color: transparent; }
     .cal-day.logged .cal-day-inner { color: #fff; font-weight: 700; }
+    .cal-day.has-note::after {
+      content: '';
+      position: absolute;
+      bottom: 2px; right: 2px;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+    }
+    .cal-day.logged.has-note::after { background: rgba(255,255,255,0.9); }
+    .cal-day:not(.logged).has-note::after { background: var(--accent); }
     .cal-day.today { box-shadow: 0 0 0 2px var(--text); }
-    .cal-day.future { opacity: .35; }
+    .cal-day.future { opacity: .3; }
     .cal-day.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-    .cal-day.tappable:active { opacity: .6; }
+    .cal-day.tappable:active { opacity: .65; }
 
     /* ── Chart ── */
     .habit-tabs {
-      display: flex; gap: 7px; overflow-x: auto; scrollbar-width: none;
-      margin-bottom: 16px; padding-bottom: 1px;
+      display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+      margin-bottom: 14px; padding-bottom: 1px;
     }
     .habit-tabs::-webkit-scrollbar { display: none; }
     .htab {
-      padding: 6px 14px; border-radius: 20px;
+      padding: 5px 12px; border-radius: 20px;
       border: 1.5px solid var(--border2); background: transparent;
-      color: var(--muted); font-size: 13px; font-weight: 600;
+      color: var(--muted); font-size: 12px; font-weight: 600;
       font-family: inherit; white-space: nowrap; cursor: pointer;
       -webkit-tap-highlight-color: transparent; flex-shrink: 0;
     }
@@ -241,29 +261,29 @@
 
     .month-nav {
       display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
-    .month-nav span { font-size: 16px; font-weight: 700; }
+    .month-nav span { font-size: 15px; font-weight: 700; }
     .mnav-btn {
-      width: 36px; height: 36px; border-radius: 8px;
+      width: 34px; height: 34px; border-radius: 8px;
       border: 1px solid var(--border2); background: var(--surface);
       color: var(--text); display: flex; align-items: center;
       justify-content: center; cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
-    .mnav-btn svg { width: 15px; height: 15px; }
+    .mnav-btn svg { width: 14px; height: 14px; }
 
     .cal-header-row {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
     }
     .cal-count {
-      font-size: 12px; font-weight: 600; color: var(--accent);
+      font-size: 11px; font-weight: 600; color: var(--accent);
       background: var(--accent-l); border-radius: 20px;
-      padding: 2px 10px; margin-left: auto;
+      padding: 2px 9px; margin-left: auto;
     }
 
     /* ── Settings ── */
-    .s-section { margin-bottom: 24px; }
+    .s-section { margin-bottom: 20px; }
     .s-title {
       font-size: 11px; font-weight: 700; color: var(--muted);
       text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px;
@@ -271,36 +291,80 @@
     .s-row {
       display: flex; align-items: center; justify-content: space-between;
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 14px 16px; margin-bottom: 4px;
+      border-radius: var(--r); padding: 13px 14px; margin-bottom: 4px;
     }
-    .s-row label { font-size: 15px; font-weight: 500; }
+    .s-row label { font-size: 14px; font-weight: 500; }
     .s-row input[type="time"] {
       background: transparent; border: none; color: var(--text);
-      font-size: 15px; font-family: inherit; outline: none;
+      font-size: 14px; font-family: inherit; outline: none;
     }
     .notif-badge {
-      font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px;
     }
     .notif-badge.ok  { background: var(--accent-l); color: var(--accent); }
     .notif-badge.no  { background: var(--bg); color: var(--muted); border: 1px solid var(--border2); }
     .notif-badge.bad { background: #fdf0ef; color: var(--danger); }
     .info {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 14px; font-size: 13px;
+      border-radius: var(--r); padding: 13px; font-size: 12px;
       color: var(--muted); line-height: 1.7; margin-bottom: 4px;
     }
     .info strong { color: var(--text); }
     .info ol { padding-left: 16px; margin-top: 4px; }
 
+    /* ── Note modal ── */
+    .note-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.35);
+      z-index: 200; display: flex; align-items: flex-end;
+    }
+    .note-sheet {
+      background: var(--surface);
+      border-radius: 18px 18px 0 0;
+      width: 100%; max-width: 390px; margin: 0 auto;
+      padding: 20px 16px calc(20px + var(--safe-b));
+    }
+    .note-sheet-title {
+      font-size: 14px; font-weight: 700; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .note-date-label {
+      font-size: 11px; color: var(--muted); margin-bottom: 8px;
+    }
+    .note-textarea {
+      width: 100%; min-height: 100px;
+      background: var(--bg); border: 1px solid var(--border2);
+      border-radius: 10px; color: var(--text); padding: 12px;
+      font-size: 14px; font-family: inherit; outline: none;
+      resize: none; line-height: 1.5;
+    }
+    .note-textarea:focus { border-color: var(--accent); background: var(--surface); }
+    .note-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .note-save {
+      flex: 1; background: var(--accent); color: #fff;
+      font-size: 14px; font-weight: 700; font-family: inherit;
+      border: none; border-radius: 8px; padding: 12px;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+    .note-cancel {
+      width: 80px; background: transparent; color: var(--muted);
+      font-size: 14px; font-weight: 600; font-family: inherit;
+      border: 1px solid var(--border2); border-radius: 8px; padding: 12px;
+      cursor: pointer; -webkit-tap-highlight-color: transparent;
+    }
+    .note-hint {
+      font-size: 11px; color: var(--muted); margin-top: 8px;
+      display: flex; align-items: center; gap: 4px;
+    }
+
     /* ── Toast ── */
     #toast {
-      position: fixed; bottom: calc(var(--nav-h) + 14px); left: 50%;
+      position: fixed; bottom: calc(var(--nav-h) + var(--safe-b) + 12px); left: 50%;
       transform: translateX(-50%) translateY(8px);
       background: var(--text); color: #fff;
-      font-size: 13px; font-weight: 600; padding: 9px 20px;
+      font-size: 12px; font-weight: 600; padding: 8px 18px;
       border-radius: 20px; opacity: 0;
       transition: opacity .2s, transform .2s;
-      pointer-events: none; white-space: nowrap; z-index: 200;
+      pointer-events: none; white-space: nowrap; z-index: 300;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
@@ -340,33 +404,27 @@
       return {
         habits: d.habits || [],
         logs: d.logs || {},
+        notes: d.notes || {},
         settings: Object.assign({ remindAt: '20:00' }, d.settings || {})
       };
     } catch { return fresh(); }
   }
-  function fresh() { return { habits: [], logs: {}, settings: { remindAt: '20:00' } }; }
+  function fresh() { return { habits: [], logs: {}, notes: {}, settings: { remindAt: '20:00' } }; }
   function save(d) { localStorage.setItem(KEY, JSON.stringify(d)); }
 
   function today() {
     const n = new Date();
-    return n.getFullYear() + '-' +
-      String(n.getMonth()+1).padStart(2,'0') + '-' +
-      String(n.getDate()).padStart(2,'0');
+    return n.getFullYear() + '-' + String(n.getMonth()+1).padStart(2,'0') + '-' + String(n.getDate()).padStart(2,'0');
   }
-  function dk(y, m, d) {
-    return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-  }
+  function dk(y, m, d) { return y + '-' + String(m+1).padStart(2,'0') + '-' + String(d).padStart(2,'0'); }
   function daysIn(y, m) { return new Date(y, m+1, 0).getDate(); }
   function uid() { return Math.random().toString(36).slice(2,10); }
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  function mlabel(y, m) {
-    return new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  }
-  function mshort(y, m) {
-    return new Date(y,m,1).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function mlabel(y, m) { return new Date(y,m,1).toLocaleDateString('en-US',{month:'long',year:'numeric'}); }
+  function mshort(y, m) { return new Date(y,m,1).toLocaleDateString('en-US',{month:'short',year:'numeric'}); }
+  function fmtDate(dateStr) {
+    const [y,m,d] = dateStr.split('-').map(Number);
+    return new Date(y,m-1,d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
   }
 
   // ── State ─────────────────────────────────────────────────────
@@ -376,14 +434,16 @@
   let chartY = new Date().getFullYear();
   let chartM = new Date().getMonth();
   const openMonths = new Set();
+  // Note modal state
+  let noteOpen = false;
+  let noteHabitId = null;
+  let noteDate = null;
 
   // ── Router ────────────────────────────────────────────────────
   function go(v, opts) {
     view = v;
     if (opts && opts.editId !== undefined) editId = opts.editId;
-    document.querySelectorAll('.nb').forEach(b =>
-      b.classList.toggle('active', b.dataset.v === v)
-    );
+    document.querySelectorAll('.nb').forEach(b => b.classList.toggle('active', b.dataset.v === v));
     render();
     window.scrollTo(0, 0);
   }
@@ -394,45 +454,49 @@
     if (view === 'chart')    app.innerHTML = renderChart();
     if (view === 'add')      app.innerHTML = renderAdd();
     if (view === 'settings') app.innerHTML = renderSettings();
+    renderNoteModal();
     bind();
   }
 
   // ── Calendar builder ──────────────────────────────────────────
   const DOW = ['S','M','T','W','T','F','S'];
 
-  function buildCal(habitId, color, y, m, logs, tappable) {
+  function buildCal(habitId, color, y, m, logs, notes, tappable) {
     const todayStr = today();
     const now = new Date();
     const total = daysIn(y, m);
-    const firstDow = new Date(y, m, 1).getDay();
+    const firstDow = new Date(y, m, 1).getDay(); // 0=Sun
 
-    // Day-of-week header row
-    let html = DOW.map(d => `<div class="cal-dow">${d}</div>`).join('');
+    // DOW header — own separate row, never inside the day grid
+    const dowRow = `<div class="cal-dow-row">${DOW.map(d => `<div class="cal-dow">${d}</div>`).join('')}</div>`;
 
-    // Empty leading cells
-    for (let i = 0; i < firstDow; i++) {
-      html += `<div class="cal-day empty"><div class="cal-day-inner"></div></div>`;
-    }
+    let cells = '';
 
     for (let d = 1; d <= total; d++) {
       const k = dk(y, m, d);
       const logged  = !!(logs[k] && logs[k][habitId]);
       const isToday = k === todayStr;
       const isFut   = new Date(y, m, d) > now;
+      const hasNote = !!(notes && notes[habitId] && notes[habitId][k]);
 
       let cls = 'cal-day';
       if (logged)   cls += ' logged';
       if (isToday)  cls += ' today';
       if (isFut)    cls += ' future';
       if (tappable) cls += ' tappable';
+      if (hasNote)  cls += ' has-note';
 
       const bg  = logged ? `background:${color}` : '';
       const dat = tappable ? `data-date="${k}" data-habit="${habitId}"` : '';
+      // Place day 1 at the correct column using grid-column-start; rest flow naturally
+      const style = (d === 1 && firstDow > 0)
+        ? `${bg ? bg+';' : ''}grid-column-start:${firstDow + 1}`
+        : bg;
 
-      html += `<div class="${cls}" style="${bg}" ${dat}><div class="cal-day-inner">${d}</div></div>`;
+      cells += `<div class="${cls}" style="${style}" ${dat}><div class="cal-day-inner">${d}</div></div>`;
     }
 
-    return `<div class="cal">${html}</div>`;
+    return `<div class="cal-wrap">${dowRow}<div class="cal">${cells}</div></div>`;
   }
 
   function countLogged(habitId, y, m, logs) {
@@ -499,7 +563,7 @@
         const {logged, total} = countLogged(h.id, y, m, d.logs);
         const pct = total > 0 ? Math.round(logged/total*100) : 0;
         const body = isOpen
-          ? `<div class="mrow-body">${buildCal(h.id, h.color, y, m, d.logs, false)}</div>`
+          ? `<div class="mrow-body">${buildCal(h.id, h.color, y, m, d.logs, d.notes, false)}</div>`
           : '';
         return `
           <div class="mrow${isOpen?' open':''}${isCur?' cur':''}" data-mk="${mk}">
@@ -519,7 +583,7 @@
             <div class="dot" style="background:${h.color}"></div>
             <div style="flex:1;min-width:0">
               <div class="habit-name">${esc(h.name)}</div>
-              <div class="habit-meta">${s > 0 ? s+' day streak' : 'No current streak'} &middot; ${totalLogged} days total</div>
+              <div class="habit-meta">${s > 0 ? s+' day streak' : 'No streak'} &middot; ${totalLogged} days total</div>
             </div>
             <button class="edit-btn" data-edit="${h.id}">${EDIT_IC}</button>
           </div>
@@ -527,7 +591,7 @@
         </div>`;
     }).join('');
 
-    return `<div class="ph"><h1>Summary</h1><p>Tap any month to expand</p></div>${blocks}`;
+    return `<div class="ph"><h1>Summary</h1><p>Tap a month to expand · ● = has note</p></div>${blocks}`;
   }
 
   function renderChart() {
@@ -544,25 +608,26 @@
       <button class="htab${hh.id===chartHabit?' active':''}" data-tab="${hh.id}">${esc(hh.name)}</button>`
     ).join('');
     const {logged, total} = countLogged(h.id, chartY, chartM, d.logs);
-    const cal = buildCal(h.id, h.color, chartY, chartM, d.logs, true);
-    const PREV_IC = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
-    const NEXT_IC = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
+    const cal = buildCal(h.id, h.color, chartY, chartM, d.logs, d.notes, true);
+    const PREV = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>`;
+    const NEXT = `<svg fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
 
     return `
-      <div class="ph"><h1>Chart</h1><p>Tap any day to log or remove it</p></div>
+      <div class="ph"><h1>Chart</h1><p>Tap to log · Long-press for note</p></div>
       <div class="habit-tabs">${tabs}</div>
       <div class="month-nav">
-        <button class="mnav-btn" id="prev-m">${PREV_IC}</button>
+        <button class="mnav-btn" id="prev-m">${PREV}</button>
         <span>${mlabel(chartY, chartM)}</span>
-        <button class="mnav-btn" id="next-m">${NEXT_IC}</button>
+        <button class="mnav-btn" id="next-m">${NEXT}</button>
       </div>
       <div class="card">
         <div class="cal-header-row">
           <div class="dot" style="background:${h.color}"></div>
-          <span style="font-weight:700;font-size:15px">${esc(h.name)}</span>
+          <span style="font-weight:700;font-size:14px">${esc(h.name)}</span>
           <span class="cal-count">${logged} / ${total}</span>
         </div>
         ${cal}
+        <div style="margin-top:10px;font-size:11px;color:var(--muted)">Tap to log/unlog · Hold to add a note · ● = has note</div>
       </div>`;
   }
 
@@ -620,7 +685,7 @@
         <div class="s-row"><label>Reminder time</label><input type="time" id="remind-time" value="${d.settings.remindAt}"></div>
         <div class="s-row"><label>Notifications</label>${badge}</div>
         ${perm==='default' ? `<button class="btn-primary" id="enable-notif">Enable notifications</button>` : ''}
-        ${perm==='denied' ? `<div class="info" style="margin-top:8px">Blocked in browser. Go to phone Settings → browser → allow notifications for this site.</div>` : ''}
+        ${perm==='denied' ? `<div class="info" style="margin-top:8px">Blocked. Go to phone Settings → Safari/Chrome → allow notifications.</div>` : ''}
         <div class="info" style="margin-top:8px"><strong>Note:</strong> Reminders fire while the app is open. Install to your home screen for best results.</div>
       </div>
       <div class="s-section">
@@ -632,6 +697,66 @@
         <div class="s-row"><label>Habits</label><span>${d.habits.length}</span></div>
         <button class="btn-danger" id="clear-btn">Clear all data</button>
       </div>`;
+  }
+
+  // ── Note Modal ────────────────────────────────────────────────
+  function renderNoteModal() {
+    let el = document.getElementById('note-overlay');
+    if (!noteOpen) { if (el) el.remove(); return; }
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'note-overlay';
+      el.className = 'note-overlay';
+      document.body.appendChild(el);
+    }
+    const d = load();
+    const h = d.habits.find(x => x.id === noteHabitId);
+    const existingNote = (d.notes[noteHabitId] && d.notes[noteHabitId][noteDate]) || '';
+    const isLogged = !!(d.logs[noteDate] && d.logs[noteDate][noteHabitId]);
+
+    el.innerHTML = `
+      <div class="note-sheet">
+        <div class="note-sheet-title">📝 Daily Note</div>
+        <div class="note-date-label">${h ? esc(h.name) : ''} · ${fmtDate(noteDate)} ${isLogged ? '✓' : ''}</div>
+        <textarea class="note-textarea" id="note-text" placeholder="How did it go? Any notes for this day…" maxlength="500">${esc(existingNote)}</textarea>
+        <div class="note-hint">Max 500 characters · Notes are stored privately on your device</div>
+        <div class="note-actions">
+          <button class="note-save" id="note-save">Save Note</button>
+          <button class="note-cancel" id="note-cancel">Cancel</button>
+        </div>
+      </div>`;
+
+    document.getElementById('note-save').onclick = () => {
+      const text = document.getElementById('note-text').value.trim();
+      const data = load();
+      if (!data.notes[noteHabitId]) data.notes[noteHabitId] = {};
+      if (text) {
+        data.notes[noteHabitId][noteDate] = text;
+      } else {
+        delete data.notes[noteHabitId][noteDate];
+      }
+      save(data);
+      closeNote();
+      render();
+      toast(text ? 'Note saved' : 'Note removed');
+    };
+    document.getElementById('note-cancel').onclick = closeNote;
+    el.addEventListener('click', e => { if (e.target === el) closeNote(); });
+
+    // Focus textarea
+    setTimeout(() => document.getElementById('note-text')?.focus(), 100);
+  }
+
+  function openNote(habitId, date) {
+    noteHabitId = habitId;
+    noteDate = date;
+    noteOpen = true;
+    renderNoteModal();
+  }
+
+  function closeNote() {
+    noteOpen = false;
+    renderNoteModal();
   }
 
   // ── Bind events ───────────────────────────────────────────────
@@ -664,8 +789,30 @@
     const nm = document.getElementById('next-m');
     if (pm) pm.onclick = () => { chartM--; if(chartM<0){chartM=11;chartY--;} render(); };
     if (nm) nm.onclick = () => { chartM++; if(chartM>11){chartM=0;chartY++;} render(); };
+
+    // Tap = toggle log, Long-press (500ms) = open note
     document.querySelectorAll('.cal-day.tappable').forEach(cell => {
+      let pressTimer = null;
+      let didLongPress = false;
+
+      cell.addEventListener('touchstart', () => {
+        didLongPress = false;
+        pressTimer = setTimeout(() => {
+          didLongPress = true;
+          openNote(cell.dataset.habit, cell.dataset.date);
+        }, 500);
+      }, { passive: true });
+
+      cell.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+      }, { passive: true });
+
+      cell.addEventListener('touchmove', () => {
+        clearTimeout(pressTimer);
+      }, { passive: true });
+
       cell.onclick = () => {
+        if (didLongPress) { didLongPress = false; return; }
         const d = load();
         const date = cell.dataset.date;
         const hid  = cell.dataset.habit;
@@ -676,6 +823,12 @@
         render();
         toast(was ? 'Removed' : 'Logged ✓');
       };
+
+      // Desktop: right-click for note
+      cell.addEventListener('contextmenu', e => {
+        e.preventDefault();
+        openNote(cell.dataset.habit, cell.dataset.date);
+      });
     });
   }
 
@@ -691,10 +844,11 @@
     if (cc) cc.onclick = () => { editId = null; go('summary'); };
     const dd = document.getElementById('del-btn');
     if (dd) dd.onclick = () => {
-      if (!confirm('Delete this habit? All logs will be removed.')) return;
+      if (!confirm('Delete this habit? All logs and notes will be removed.')) return;
       const d = load(); const id = dd.dataset.id;
       d.habits = d.habits.filter(h => h.id !== id);
       Object.keys(d.logs).forEach(k => { delete d.logs[k][id]; });
+      delete d.notes[id];
       save(d); editId = null; go('summary'); toast('Habit deleted');
     };
     const form = document.getElementById('hform');
